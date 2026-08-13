@@ -1,0 +1,254 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following module:
+#   * flous_menu_visibility
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-12 00:00+0000\n"
+"PO-Revision-Date: 2026-08-12 00:00+0000\n"
+"Last-Translator: Flous Flow\n"
+"Language-Team: Arabic\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_res_users__hidden_menu_ids
+msgid "Hidden Menus"
+msgstr "القوائم المخفية"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_res_users__is_admin
+msgid "Is Admin"
+msgstr "مدير النظام"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_res_users__is_internal_user
+msgid "Is Internal User"
+msgstr "مستخدم داخلي"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_ir_ui_menu__restricted_user_ids
+msgid "Restricted Users"
+msgstr "المستخدمون المقيدون"
+
+#. module: flous_menu_visibility
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.view_users_form_hidden_menus
+msgid "Hidden Menus"
+msgstr "القوائم المخفية"
+
+#. module: flous_menu_visibility
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.edit_menu_access_restricted_users
+msgid "Restricted Users"
+msgstr "المستخدمون المقيدون"
+
+#. module: flous_menu_visibility
+#: code:addons/flous_menu_visibility/models/res_users.py:0
+#, python-format
+msgid "Menus that will be hidden for this user. Selecting a menu here removes it from the user's application menu."
+msgstr "القوائم التي ستُخفى لهذا المستخدم. اختيار قائمة هنا يزيلها من قائمة تطبيق المستخدم."
+
+#. module: flous_menu_visibility
+#: code:addons/flous_menu_visibility/models/res_users.py:0
+#, python-format
+msgid "Whether this user is the main administrator."
+msgstr "هل هذا المستخدم هو مدير النظام الرئيسي."
+
+#. module: flous_menu_visibility
+#: code:addons/flous_menu_visibility/models/res_users.py:0
+#, python-format
+msgid "Whether this user belongs to the internal user group."
+msgstr "هل هذا المستخدم ينتمي لمجموعة المستخدمين الداخليين."
+
+#. module: flous_menu_visibility
+#: code:addons/flous_menu_visibility/models/ir_ui_menu.py:0
+#, python-format
+msgid "Users for whom this menu will be hidden."
+msgstr "المستخدمون الذين ستُخفى لهم هذه القائمة."
+
+#. module: flous_menu_visibility
+#: model:ir.model,name:flous_menu_visibility.model_flous_field_hide_rule
+msgid "Field Visibility Rule"
+msgstr "قاعدة إخفاء الحقل"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_field_hide_rule__name
+msgid "Rule Name"
+msgstr "اسم القاعدة"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_field_hide_rule__active
+msgid "Active"
+msgstr "نشطة"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_field_hide_rule__sequence
+msgid "Sequence"
+msgstr "الترتيب"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_field_hide_rule__model_id
+msgid "Model"
+msgstr "النموذج"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_field_hide_rule__model_name
+msgid "Model Name"
+msgstr "اسم النموذج"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_field_hide_rule__field_id
+msgid "Field"
+msgstr "الحقل"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_field_hide_rule__field_name
+msgid "Field Name"
+msgstr "اسم الحقل"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_field_hide_rule__field_string
+msgid "Field Label"
+msgstr "عنوان الحقل"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_field_hide_rule__user_ids
+msgid "Users"
+msgstr "المستخدمون"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_field_hide_rule__notes
+msgid "Notes"
+msgstr "ملاحظات"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,help:flous_menu_visibility.field_flous_field_hide_rule__name
+msgid "A short name describing this rule, e.g. \"Hide cost price from sales\"."
+msgstr "اسم مختصر يصف القاعدة، مثل «إخفاء سعر التكلفة عن المبيعات»."
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,help:flous_menu_visibility.field_flous_field_hide_rule__model_id
+msgid "The model containing the field to hide."
+msgstr "النموذج الذي يحتوي الحقل المراد إخفاؤه."
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,help:flous_menu_visibility.field_flous_field_hide_rule__field_id
+msgid "The field to hide (e.g. list_price, standard_price)."
+msgstr "الحقل المراد إخفاؤه (مثل list_price أو standard_price)."
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,help:flous_menu_visibility.field_flous_field_hide_rule__user_ids
+msgid "Users for whom this field will be hidden. System administrators always see every field."
+msgstr "المستخدمون الذين سيُخفى عنهم هذا الحقل. مديرو النظام يرون كل الحقول دائماً."
+
+#. module: flous_menu_visibility
+#: code:addons/flous_menu_visibility/models/field_hide_rule.py:0
+#, python-format
+msgid "A rule for this model/field already exists. Edit the existing rule to change the list of users instead of creating a duplicate."
+msgstr "توجد قاعدة لهذا النموذج/الحقل بالفعل. عدّل القاعدة الموجودة لتغيير قائمة المستخدمين بدلاً من إنشاء قاعدة مكررة."
+
+#. module: flous_menu_visibility
+#: code:addons/flous_menu_visibility/models/field_hide_rule.py:0
+#, python-format
+msgid "The selected field does not belong to the selected model."
+msgstr "الحقل المحدد لا ينتمي إلى النموذج المحدد."
+
+#. module: flous_menu_visibility
+#: model:ir.actions.act_window,name:flous_menu_visibility.action_field_hide_rule
+#: model:ir.ui.menu,name:flous_menu_visibility.menu_field_hide_rule
+msgid "Field Visibility Rules"
+msgstr "قواعد إخفاء الحقول"
+
+#. module: flous_menu_visibility
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.field_hide_rule_form
+msgid "Users"
+msgstr "المستخدمون"
+
+#. module: flous_menu_visibility
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.field_hide_rule_form
+msgid "Notes"
+msgstr "ملاحظات"
+
+#. module: flous_menu_visibility
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.field_hide_rule_form
+msgid "Optional notes about this rule..."
+msgstr "ملاحظات اختيارية حول هذه القاعدة..."
+
+#. module: flous_menu_visibility
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.field_hide_rule_search
+msgid "Active"
+msgstr "نشطة"
+
+#. module: flous_menu_visibility
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.field_hide_rule_search
+msgid "Archived"
+msgstr "مؤرشفة"
+
+#. module: flous_menu_visibility
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.field_hide_rule_search
+msgid "Group By"
+msgstr "تجميع حسب"
+
+#. module: flous_menu_visibility
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.field_hide_rule_search
+msgid "Model"
+msgstr "النموذج"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_res_users__visible_warehouse_ids
+msgid "Visible Warehouses"
+msgstr "المخازن الظاهرة"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_stock_warehouse__visible_user_ids
+msgid "Visible Users"
+msgstr "المستخدمون الظاهرون"
+
+#. module: flous_menu_visibility
+#: model:res.groups,name:flous_menu_visibility.group_warehouse_visibility
+msgid "Warehouse Visibility"
+msgstr "رؤية المخازن"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,help:flous_menu_visibility.field_res_users__visible_warehouse_ids
+msgid "Warehouses whose operations (receipts, deliveries, internal transfers) this user can see. Only applies to users in the 'Warehouse Visibility' group: they see operations of these warehouses only. An empty list means no operations are visible for group members. Users outside that group (and system administrators) always see everything."
+msgstr "المخازن التي يمكن لهذا المستخدم رؤية عملياتها (استلام، تسليم، تحويلات داخلية). يُطبق فقط على مستخدمي مجموعة «رؤية المخازن»: يرون عمليات هذه المخازن فقط. القائمة الفارغة تعني عدم رؤية أي عمليات لأعضاء المجموعة. المستخدمون خارج المجموعة (ومديرو النظام) يرون كل شيء دائماً."
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,help:flous_menu_visibility.field_stock_warehouse__visible_user_ids
+msgid "Users (in the \"Warehouse Visibility\" group) who can see the operations of this warehouse."
+msgstr "المستخدمون (في مجموعة «رؤية المخازن») الذين يمكنهم رؤية عمليات هذا المخزن."
+
+#. module: flous_menu_visibility
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.view_users_form_hidden_menus
+msgid "Visible Warehouses"
+msgstr "المخازن الظاهرة"
+
+#. module: flous_menu_visibility
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.view_warehouse_visible_users
+msgid "Visible Users"
+msgstr "المستخدمون الظاهرون"
+
+#. module: flous_menu_visibility
+#: model:ir.rule,name:flous_menu_visibility.picking_warehouse_visibility_rule
+msgid "Picking warehouse visibility (Flous Flow)"
+msgstr "رؤية عمليات المخازن (فلوس فلو)"
+
+#. module: flous_menu_visibility
+#: model:ir.rule,name:flous_menu_visibility.move_warehouse_visibility_rule
+msgid "Move warehouse visibility (Flous Flow)"
+msgstr "رؤية حركات المخازن (فلوس فلو)"
+
+#. module: flous_menu_visibility
+#: model:ir.rule,name:flous_menu_visibility.move_line_warehouse_visibility_rule
+msgid "Move line warehouse visibility (Flous Flow)"
+msgstr "رؤية بنود حركات المخازن (فلوس فلو)"
+
+#. module: flous_menu_visibility
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.field_hide_rule_search
+msgid "Field"
+msgstr "الحقل"

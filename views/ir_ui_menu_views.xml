@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="edit_menu_access_restricted_users" model="ir.ui.view">
+        <field name="name">ir.ui.menu.form.restricted.users.flous</field>
+        <field name="model">ir.ui.menu</field>
+        <field name="inherit_id" ref="base.edit_menu_access"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="restricted_users" string="Restricted Users">
+                    <list>
+                        <field name="restricted_user_ids"/>
+                    </list>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

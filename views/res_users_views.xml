@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_users_form_hidden_menus" model="ir.ui.view">
+        <field name="name">res.users.form.hidden.menus.flous</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="hidden_menus" string="Hidden Menus"
+                      invisible="is_admin or not is_internal_user">
+                    <list>
+                        <field name="hidden_menu_ids"/>
+                    </list>
+                </page>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page name="visible_warehouses" string="Visible Warehouses"
+                      groups="base.group_system"
+                      invisible="is_admin">
+                    <list>
+                        <field name="visible_warehouse_ids"/>
+                    </list>
+                </page>
+            </xpath>
+            <field name="name" position="after">
+                <field name="is_admin" invisible="1"/>
+                <field name="is_internal_user" invisible="1"/>
+            </field>
+        </field>
+    </record>
+</odoo>

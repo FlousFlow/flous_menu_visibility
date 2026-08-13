@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- List -->
+    <record id="field_hide_rule_tree" model="ir.ui.view">
+        <field name="name">flous.field.hide.rule.tree</field>
+        <field name="model">flous.field.hide.rule</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="field_id"/>
+                <field name="field_string" optional="show"/>
+                <field name="user_ids" widget="many2many_tags"/>
+                <field name="active" invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form -->
+    <record id="field_hide_rule_form" model="ir.ui.view">
+        <field name="name">flous.field.hide.rule.form</field>
+        <field name="model">flous.field.hide.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <header/>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                        <field name="active" invisible="1"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="model_id"/>
+                            <field name="model_name" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="field_id"/>
+                            <field name="field_string" readonly="1"/>
+                            <field name="sequence"/>
+                        </group>
+                    </group>
+                    <separator string="Users"/>
+                    <field name="user_ids" widget="many2many_tags"/>
+                    <separator string="Notes"/>
+                    <field name="notes"
+                           placeholder="Optional notes about this rule..."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search -->
+    <record id="field_hide_rule_search" model="ir.ui.view">
+        <field name="name">flous.field.hide.rule.search</field>
+        <field name="model">flous.field.hide.rule</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="field_id"/>
+                <filter name="active" string="Active"
+                        domain="[('active', '=', True)]"/>
+                <filter name="inactive" string="Archived"
+                        domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_model" string="Model"
+                            context="{'group_by': 'model_id'}"/>
+                    <filter name="group_field" string="Field"
+                            context="{'group_by': 'field_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_field_hide_rule" model="ir.actions.act_window">
+        <field name="name">Field Visibility Rules</field>
+        <field name="res_model">flous.field.hide.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="field_hide_rule_search"/>
+        <field name="context">{'search_default_active': 1}</field>
+    </record>
+
+    <!-- Menu: Settings > Field Visibility Rules (admins only) -->
+    <menuitem id="menu_field_hide_rule"
+              name="Field Visibility Rules"
+              parent="base.menu_administration"
+              action="action_field_hide_rule"
+              groups="base.group_system"
+              sequence="100"/>
+</odoo>
