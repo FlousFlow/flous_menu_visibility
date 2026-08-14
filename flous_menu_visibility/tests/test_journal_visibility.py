@@ -17,7 +17,7 @@ class TestJournalVisibility(TransactionCase):
         self.test_user = self.env['res.users'].create({
             'name': 'Flous Journal Test User',
             'login': 'flous_journal_test_user',
-            'groups_id': [(6, 0, [self.internal_group.id, self.readonly_group.id])],
+            'group_ids': [(6, 0, [self.internal_group.id, self.readonly_group.id])],
         })
         self.journal_a = self.env['account.journal'].create({
             'name': 'Flous Journal A', 'type': 'general', 'code': 'FJAA',
@@ -30,7 +30,7 @@ class TestJournalVisibility(TransactionCase):
         return self.env['res.users'].create({
             'name': 'Flous ' + login,
             'login': login,
-            'groups_id': [(6, 0, [self.internal_group.id, self.readonly_group.id])],
+            'group_ids': [(6, 0, [self.internal_group.id, self.readonly_group.id])],
         })
 
     def _visible_journals(self, user):

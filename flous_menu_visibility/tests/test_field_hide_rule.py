@@ -20,7 +20,7 @@ class TestFieldHideRule(TransactionCase):
         self.test_user = self.env['res.users'].create({
             'name': 'Flous Field Test User',
             'login': 'flous_field_test_user',
-            'groups_id': [(6, 0, [self.internal_group.id])],
+            'group_ids': [(6, 0, [self.internal_group.id])],
         })
         self.partner_form = self.env.ref('base.view_partner_form')
 
@@ -28,7 +28,7 @@ class TestFieldHideRule(TransactionCase):
         return self.env['res.users'].create({
             'name': 'Flous Field ' + login,
             'login': login,
-            'groups_id': [(6, 0, [self.internal_group.id])],
+            'group_ids': [(6, 0, [self.internal_group.id])],
         })
 
     def _create_rule(self, user_ids):

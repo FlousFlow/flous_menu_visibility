@@ -87,9 +87,9 @@ class ResUsers(models.Model):
         for user in self:
             user.is_admin = user.id == admin.id
 
-    @api.depends('groups_id')
+    @api.depends('group_ids')
     def _compute_is_internal_user(self):
         """Only internal users are meant to have menu restrictions applied."""
         internal_group = self.env.ref('base.group_user')
         for user in self:
-            user.is_internal_user = internal_group in user.groups_id
+            user.is_internal_user = internal_group in user.group_ids

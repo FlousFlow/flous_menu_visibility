@@ -23,19 +23,19 @@ class TestMenuVisibility(TransactionCase):
             # Top-level menu (no parent) whose action targets res.partner,
             # which group_user can read -> the menu is visible by default.
             'action': 'ir.actions.act_window,%s' % self.action.id,
-            'groups_id': [(6, 0, [self.internal_group.id])],
+            'group_ids': [(6, 0, [self.internal_group.id])],
         })
         self.test_user = self.env['res.users'].create({
             'name': 'Flous Menu Test User',
             'login': 'flous_menu_test_user',
-            'groups_id': [(6, 0, [self.internal_group.id])],
+            'group_ids': [(6, 0, [self.internal_group.id])],
         })
 
     def _new_internal_user(self, login):
         return self.env['res.users'].create({
             'name': 'Flous Menu ' + login,
             'login': login,
-            'groups_id': [(6, 0, [self.internal_group.id])],
+            'group_ids': [(6, 0, [self.internal_group.id])],
         })
 
     def test_menu_visible_by_default(self):

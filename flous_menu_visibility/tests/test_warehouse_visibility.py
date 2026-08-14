@@ -48,7 +48,7 @@ class TestWarehouseVisibility(TransactionCase):
         vals = {
             'name': 'Flous ' + login,
             'login': login,
-            'groups_id': [(6, 0, groups)],
+            'group_ids': [(6, 0, groups)],
         }
         if warehouse_ids:
             vals['visible_warehouse_ids'] = [(6, 0, warehouse_ids)]

@@ -4,7 +4,7 @@
 
 {
     'name': 'Menu, Field, Warehouse & Journal Visibility Control',
-    'version': '18.0.4.0.0',
+    'version': '19.0.1.0.0',
     'category': 'Technical',
     'summary': 'Hide menus, fields, warehouse operations and accounting journals per user.',
     'description': """
