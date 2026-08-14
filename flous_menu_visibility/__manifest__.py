@@ -20,6 +20,7 @@ Features:
 - System administrators always see everything.
 """,
     'author': 'Flous Flow',
+    'website': 'https://flousflow.com/',
     'maintainer': 'Flous Flow',
     'depends': ['base', 'stock', 'account'],
     'data': [
