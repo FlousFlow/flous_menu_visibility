@@ -1,7 +1,8 @@
-# Menu, Field & Warehouse Visibility Control
+# Menu, Field, Warehouse & Journal Visibility Control
 
 **Flous Flow** — Odoo module to hide specific menu items, hide specific
-fields, and restrict warehouse operations per user.
+fields, restrict warehouse operations per user, and hide accounting
+journals per user.
 
 ## Features
 
@@ -11,6 +12,8 @@ fields, and restrict warehouse operations per user.
   `standard_price` (cost price) on the product form from specific users.
 - **Restrict warehouse operations per user** — users in the "Warehouse
   Visibility" group only see operations of their assigned warehouses.
+- **Hide accounting journals per user** — a restricted user cannot read the
+  journal, its entries or their lines (real record rules, not just UI).
 - Hiding a field sets `invisible="1"` on the view node — the value stays
   loaded, so view expressions/domains keep working and **the view is never
   broken**.
@@ -86,10 +89,38 @@ filter by the user's `visible_warehouse_ids`. Stock ships no permissive
 per-user group rules on these models (only company-based global rules), so
 the restriction is not neutralized. The rules apply to **read** only.
 
+## Part 4 — Hide accounting journals
+
+### How to use
+
+1. **Settings → Users & Companies → Users**, open a user.
+2. On the **Hidden Journals** page (admins only), add the journals to hide
+   for that user.
+
+Alternatively, open **Accounting → Configuration → Journals**, and on the
+**Restricted Users** tab pick the users that must not see the journal. Both
+sides stay in sync natively.
+
+### Technical notes
+
+| Model              | Field / rule                              | Description                        |
+|--------------------|-------------------------------------------|-----------------------------------|
+| `res.users`        | `hidden_journal_ids` (M2M → `account.journal`) | Journals hidden for the user |
+| `account.journal`  | `restricted_user_ids` (M2M → `res.users`) | Inverse side (same table)         |
+| `account.journal`  | `ir.rule` `journal_visibility_rule`        | Hides journals where the user is restricted |
+| `account.move`     | `ir.rule` `move_visibility_rule`           | Hides entries of hidden journals  |
+| `account.move.line`| `ir.rule` `move_line_visibility_rule`      | Hides items of hidden journals    |
+
+The three rules are **global rules** (AND-ed with every group rule), so
+permissive "see-all" group rules from `account` cannot neutralize them.
+A journal is hidden only when the current user is listed in its
+`restricted_user_ids`; an empty list means visible to everyone. Admins are
+never restricted. The rules apply to **read** only.
+
 ## Installation
 
 ```bash
-# from the Odoo source directory (installs the `stock` dependency too)
+# from the Odoo source directory (installs the `stock` and `account` deps too)
 ./odoo-bin -c odoo.conf -d odoo18 -i flous_menu_visibility --stop-after-init
 ```
 
@@ -121,6 +152,14 @@ To upgrade an already-installed copy:
 - [ ] A group member with no assigned warehouse sees no operations.
 - [ ] Removing the user from the group restores full visibility.
 
+### Journals
+- [ ] User form shows the "Hidden Journals" page (admins only).
+- [ ] Journal form shows the "Restricted Users" tab (admins only).
+- [ ] Hiding a journal from a user also shows the user on the journal form (and vice versa).
+- [ ] The restricted user no longer sees the journal in Accounting, and cannot open its entries or items.
+- [ ] Other users still see the journal; the admin still sees everything.
+- [ ] Removing the restriction restores access immediately.
+
 ## Automated tests
 
 ```bash
@@ -135,6 +174,11 @@ To upgrade an already-installed copy:
   rules added by *other* modules on these models; stock itself adds none.
 - Do not hide **required** fields: the field stays required, so the form
   cannot be saved by the restricted user.
+- Journal restriction is enforced for **read**; users with journal write
+  rights (managers) are trusted and not further limited.
+- The `account.move.line` journal rule uses a 3-level domain traversal
+  (`move_id.journal_id.restricted_user_ids`); on very large move-line tables
+  this adds a join to queries.
 
 ## License
 

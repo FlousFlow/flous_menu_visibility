@@ -5,3 +5,4 @@
 from . import test_menu_visibility
 from . import test_field_hide_rule
 from . import test_warehouse_visibility
+from . import test_journal_visibility

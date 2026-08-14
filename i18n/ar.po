@@ -252,3 +252,34 @@ msgstr "رؤية بنود حركات المخازن (فلوس فلو)"
 #: model_terms:ir.ui.view,arch_db:flous_menu_visibility.field_hide_rule_search
 msgid "Field"
 msgstr "الحقل"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_res_users__hidden_journal_ids
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.view_users_form_hidden_journals
+msgid "Hidden Journals"
+msgstr "الدفاتر المخفية"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,help:flous_menu_visibility.field_res_users__hidden_journal_ids
+msgid "Journals hidden from this user. An empty list means the user sees every journal. System administrators always see all journals."
+msgstr "الدفاتر المخفية عن هذا المستخدم. القائمة الفارغة تعني أن المستخدم يرى كل الدفاتر. مديرو النظام يرون كل الدفاتر دائماً."
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,help:flous_menu_visibility.field_account_journal__restricted_user_ids
+msgid "Users for whom this journal will be hidden."
+msgstr "المستخدمون الذين ستُخفى عنهم هذه الدفترة."
+
+#. module: flous_menu_visibility
+#: model:ir.rule,name:flous_menu_visibility.journal_visibility_rule
+msgid "Journal visibility (Flous Flow)"
+msgstr "رؤية الدفاتر (فلوس فلو)"
+
+#. module: flous_menu_visibility
+#: model:ir.rule,name:flous_menu_visibility.move_visibility_rule
+msgid "Move visibility (Flous Flow)"
+msgstr "رؤية قيود اليومية (فلوس فلو)"
+
+#. module: flous_menu_visibility
+#: model:ir.rule,name:flous_menu_visibility.move_line_visibility_rule
+msgid "Move line visibility (Flous Flow)"
+msgstr "رؤية بنود القيود (فلوس فلو)"

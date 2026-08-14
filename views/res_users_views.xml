@@ -18,6 +18,13 @@
                     <field name="visible_warehouse_ids"/>
                 </page>
             </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page name="hidden_journals" string="Hidden Journals"
+                      groups="base.group_system"
+                      invisible="is_admin">
+                    <field name="hidden_journal_ids"/>
+                </page>
+            </xpath>
             <field name="name" position="after">
                 <field name="is_admin" invisible="1"/>
                 <field name="is_internal_user" invisible="1"/>

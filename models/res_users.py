@@ -26,6 +26,18 @@ class ResUsers(models.Model):
              "removes it from the user's application menu.",
     )
 
+    hidden_journal_ids = fields.Many2many(
+        'account.journal',
+        relation='flous_journal_visibility_rel',
+        column1='user_id',
+        column2='journal_id',
+        string='Hidden Journals',
+        groups='base.group_system',
+        help="Journals hidden from this user. An empty list means the user "
+             "sees every journal. System administrators always see all "
+             "journals.",
+    )
+
     visible_warehouse_ids = fields.Many2many(
         'stock.warehouse',
         relation='flous_warehouse_visibility_rel',
@@ -42,10 +54,16 @@ class ResUsers(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
-        if 'visible_warehouse_ids' in vals:
+        if 'visible_warehouse_ids' in vals or 'hidden_journal_ids' in vals:
             # ir.rule domains are cached per user (uid). Invalidate the
             # registry cache so the new restrictions apply immediately.
             self.env.registry.clear_cache()
+        if 'hidden_journal_ids' in vals and not self.env.context.get('flous_skip_admin_guard'):
+            # Defense in depth: the administrator is never restricted.
+            admin = self.env.ref('base.user_admin')
+            if admin in self:
+                admin.with_context(flous_skip_admin_guard=True).sudo().write(
+                    {'hidden_journal_ids': [(5, 0, 0)]})
         return res
 
     is_admin = fields.Boolean(

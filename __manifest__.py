@@ -3,19 +3,19 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 {
-    'name': 'Menu, Field & Warehouse Visibility Control',
-    'version': '18.0.3.0.0',
+    'name': 'Menu, Field, Warehouse & Journal Visibility Control',
+    'version': '18.0.4.0.0',
     'category': 'Technical',
-    'summary': 'Hide menus/fields and restrict warehouse operations per user.',
+    'summary': 'Hide menus, fields, warehouse operations and accounting journals per user.',
     'description': """
 <section class="oe_container">
 <div class="oe_row oe_spaced">
-<h2 class="oe_slogan">Menu, Field &amp; Warehouse Visibility Control</h2>
+<h2 class="oe_slogan">Menu, Field, Warehouse &amp; Journal Visibility Control</h2>
 <p class="oe_mt32">
 Control what each user can see across the whole system:
-hide menu items, hide any field of any model, and restrict
-warehouse operations per user. System administrators always
-see everything.
+hide menu items, hide any field of any model, restrict
+warehouse operations per user, and hide accounting journals
+per user. System administrators always see everything.
 </p>
 </div>
 </section>
@@ -77,17 +77,51 @@ and the view is never broken.
 </div>
 </div>
 </section>
+
+<section class="oe_container oe_dark">
+<div class="oe_row oe_spaced">
+<h3 class="oe_slogan">Hide accounting journals per user</h3>
+<div class="oe_span6">
+<img class="oe_picture oe_screenshot" src="screenshot_5_hidden_journals.png"/>
+</div>
+<div class="oe_span6">
+<p class="oe_mt32">
+Administrators pick the hidden journals on the user's
+"Hidden Journals" page. A restricted user cannot read the
+journal, its entries (account.move) or their lines
+(account.move.line) — through menus, reports, exports or API.
+</p>
+</div>
+</div>
+</section>
+
+<section class="oe_container">
+<div class="oe_row oe_spaced">
+<h3 class="oe_slogan">Or restrict users from the journal</h3>
+<div class="oe_span6">
+<img class="oe_picture oe_screenshot" src="screenshot_6_journal_restricted_users.png"/>
+</div>
+<div class="oe_span6">
+<p class="oe_mt32">
+Use the journal's "Restricted Users" tab. Both sides stay in
+sync natively.
+</p>
+</div>
+</div>
+</section>
 """,
     'author': 'Flous Flow',
     'maintainer': 'Flous Flow',
-    'depends': ['base', 'stock'],
+    'depends': ['base', 'stock', 'account'],
     'data': [
         'security/ir.model.access.csv',
         'security/security.xml',
+        'security/journal_rules.xml',
         'views/res_users_views.xml',
         'views/ir_ui_menu_views.xml',
         'views/field_hide_rule_views.xml',
         'views/stock_warehouse_views.xml',
+        'views/account_journal_views.xml',
     ],
     'license': 'LGPL-3',
     'installable': True,

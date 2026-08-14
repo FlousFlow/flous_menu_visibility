@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Journal read restriction (GLOBAL rule: AND-ed with every group
+         rule, so permissive "see-all" group rules cannot neutralize it).
+         A journal is hidden only when the current user is listed in its
+         restricted_user_ids; an empty list means visible to everyone.
+         Admins are never restricted (write hooks strip them from the
+         restricted lists). -->
+    <record id="journal_visibility_rule" model="ir.rule">
+        <field name="name">Journal visibility (Flous Flow)</field>
+        <field name="model_id" ref="account.model_account_journal"/>
+        <field name="groups" eval="[(5, 0, 0)]"/>
+        <field name="domain_force">['|', ('restricted_user_ids', '=', False), ('restricted_user_ids', 'not in', user.id)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Journal entry (account.move) read restriction: moves of hidden
+         journals are not readable either. -->
+    <record id="move_visibility_rule" model="ir.rule">
+        <field name="name">Move visibility (Flous Flow)</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="groups" eval="[(5, 0, 0)]"/>
+        <field name="domain_force">['|', ('journal_id.restricted_user_ids', '=', False), ('journal_id.restricted_user_ids', 'not in', user.id)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Journal item (account.move.line) read restriction: lines of hidden
+         journals are not readable either (covers Journal Items / reports). -->
+    <record id="move_line_visibility_rule" model="ir.rule">
+        <field name="name">Move line visibility (Flous Flow)</field>
+        <field name="model_id" ref="account.model_account_move_line"/>
+        <field name="groups" eval="[(5, 0, 0)]"/>
+        <field name="domain_force">['|', ('move_id.journal_id.restricted_user_ids', '=', False), ('move_id.journal_id.restricted_user_ids', 'not in', user.id)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+</odoo>

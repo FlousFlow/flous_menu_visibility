@@ -7,3 +7,4 @@ from . import ir_ui_menu
 from . import field_hide_rule
 from . import ir_ui_view
 from . import stock_warehouse
+from . import account_journal
