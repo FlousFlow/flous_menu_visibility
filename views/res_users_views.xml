@@ -8,18 +8,14 @@
             <xpath expr="//notebook" position="inside">
                 <page name="hidden_menus" string="Hidden Menus"
                       invisible="is_admin or not is_internal_user">
-                    <list>
-                        <field name="hidden_menu_ids"/>
-                    </list>
+                    <field name="hidden_menu_ids"/>
                 </page>
             </xpath>
             <xpath expr="//notebook" position="inside">
                 <page name="visible_warehouses" string="Visible Warehouses"
                       groups="base.group_system"
                       invisible="is_admin">
-                    <list>
-                        <field name="visible_warehouse_ids"/>
-                    </list>
+                    <field name="visible_warehouse_ids"/>
                 </page>
             </xpath>
             <field name="name" position="after">
