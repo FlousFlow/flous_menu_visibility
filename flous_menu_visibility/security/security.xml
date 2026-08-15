@@ -10,7 +10,6 @@
          field must stay readable for group members (it is not group-gated). -->
     <record id="group_warehouse_visibility" model="res.groups">
         <field name="name">Warehouse Visibility</field>
-        <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
     <!-- Operations (stock.picking) -->

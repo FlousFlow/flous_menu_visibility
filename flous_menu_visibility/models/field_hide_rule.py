@@ -55,11 +55,11 @@ class FlousFieldHideRule(models.Model):
     )
     notes = fields.Text(string='Notes')
 
-    _sql_constraints = [
-        ('model_field_unique', 'unique(model_id, field_id)',
-         _('A rule for this model/field already exists. Edit the existing rule '
-           'to change the list of users instead of creating a duplicate.')),
-    ]
+    _model_field_unique = models.Constraint(
+        'unique(model_id, field_id)',
+        _('A rule for this model/field already exists. Edit the existing rule '
+          'to change the list of users instead of creating a duplicate.'),
+    )
 
     @api.constrains('model_id', 'field_id')
     def _check_field_belongs_to_model(self):

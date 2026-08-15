@@ -62,7 +62,7 @@
                         domain="[('active', '=', True)]"/>
                 <filter name="inactive" string="Archived"
                         domain="[('active', '=', False)]"/>
-                <group expand="0" string="Group By">
+                <group>
                     <filter name="group_model" string="Model"
                             context="{'group_by': 'model_id'}"/>
                     <filter name="group_field" string="Field"
