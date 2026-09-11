@@ -18,6 +18,9 @@ msgstr ""
 
 #. module: flous_menu_visibility
 #: model:ir.model.fields,field_description:flous_menu_visibility.field_res_users__hidden_menu_ids
+#: model:ir.actions.act_window,name:flous_menu_visibility.action_visibility_menu
+#: model:ir.ui.menu,name:flous_menu_visibility.menu_visibility_menus
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.view_visibility_menu_list
 msgid "Hidden Menus"
 msgstr "القوائم المخفية"
 
@@ -33,16 +36,6 @@ msgstr "مستخدم داخلي"
 
 #. module: flous_menu_visibility
 #: model:ir.model.fields,field_description:flous_menu_visibility.field_ir_ui_menu__restricted_user_ids
-msgid "Restricted Users"
-msgstr "المستخدمون المقيدون"
-
-#. module: flous_menu_visibility
-#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.view_users_form_hidden_menus
-msgid "Hidden Menus"
-msgstr "القوائم المخفية"
-
-#. module: flous_menu_visibility
-#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.edit_menu_access_restricted_users
 msgid "Restricted Users"
 msgstr "المستخدمون المقيدون"
 
@@ -165,23 +158,8 @@ msgstr "قواعد إخفاء الحقول"
 
 #. module: flous_menu_visibility
 #: model_terms:ir.ui.view,arch_db:flous_menu_visibility.field_hide_rule_form
-msgid "Users"
-msgstr "المستخدمون"
-
-#. module: flous_menu_visibility
-#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.field_hide_rule_form
-msgid "Notes"
-msgstr "ملاحظات"
-
-#. module: flous_menu_visibility
-#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.field_hide_rule_form
 msgid "Optional notes about this rule..."
 msgstr "ملاحظات اختيارية حول هذه القاعدة..."
-
-#. module: flous_menu_visibility
-#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.field_hide_rule_search
-msgid "Active"
-msgstr "نشطة"
 
 #. module: flous_menu_visibility
 #: model_terms:ir.ui.view,arch_db:flous_menu_visibility.field_hide_rule_search
@@ -192,11 +170,6 @@ msgstr "مؤرشفة"
 #: model_terms:ir.ui.view,arch_db:flous_menu_visibility.field_hide_rule_search
 msgid "Group By"
 msgstr "تجميع حسب"
-
-#. module: flous_menu_visibility
-#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.field_hide_rule_search
-msgid "Model"
-msgstr "النموذج"
 
 #. module: flous_menu_visibility
 #: model:ir.model.fields,field_description:flous_menu_visibility.field_res_users__visible_warehouse_ids
@@ -211,6 +184,9 @@ msgstr "المستخدمون الظاهرون"
 #. module: flous_menu_visibility
 #: model:res.groups,name:flous_menu_visibility.group_warehouse_visibility
 #: model:res.groups.privilege,name:flous_menu_visibility.res_groups_privilege_warehouse_visibility
+#: model:ir.actions.act_window,name:flous_menu_visibility.action_visibility_warehouse
+#: model:ir.ui.menu,name:flous_menu_visibility.menu_visibility_warehouses
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.view_visibility_warehouse_list
 msgid "Warehouse Visibility"
 msgstr "صلاحية رؤية المخازن"
 
@@ -223,16 +199,6 @@ msgstr "المخازن التي يمكن لهذا المستخدم رؤية عم
 #: model:ir.model.fields,help:flous_menu_visibility.field_stock_warehouse__visible_user_ids
 msgid "Users (in the \"Warehouse Visibility\" group) who can see the operations of this warehouse."
 msgstr "المستخدمون (في مجموعة «رؤية المخازن») الذين يمكنهم رؤية عمليات هذا المخزن."
-
-#. module: flous_menu_visibility
-#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.view_users_form_hidden_menus
-msgid "Visible Warehouses"
-msgstr "المخازن الظاهرة"
-
-#. module: flous_menu_visibility
-#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.view_warehouse_visible_users
-msgid "Visible Users"
-msgstr "المستخدمون الظاهرون"
 
 #. module: flous_menu_visibility
 #: model:ir.rule,name:flous_menu_visibility.picking_warehouse_visibility_rule
@@ -250,12 +216,10 @@ msgid "Move line warehouse visibility (Flous Flow)"
 msgstr "رؤية بنود حركات المخازن (فلوس فلو)"
 
 #. module: flous_menu_visibility
-#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.field_hide_rule_search
-msgid "Field"
-msgstr "الحقل"
-
-#. module: flous_menu_visibility
 #: model:ir.model.fields,field_description:flous_menu_visibility.field_res_users__hidden_journal_ids
+#: model:ir.actions.act_window,name:flous_menu_visibility.action_visibility_journal
+#: model:ir.ui.menu,name:flous_menu_visibility.menu_visibility_journals
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.view_visibility_journal_list
 #: model_terms:ir.ui.view,arch_db:flous_menu_visibility.view_users_form_hidden_journals
 msgid "Hidden Journals"
 msgstr "الدفاتر المخفية"
@@ -284,3 +248,8 @@ msgstr "رؤية قيود اليومية (فلوس فلو)"
 #: model:ir.rule,name:flous_menu_visibility.move_line_visibility_rule
 msgid "Move line visibility (Flous Flow)"
 msgstr "رؤية بنود القيود (فلوس فلو)"
+
+#. module: flous_menu_visibility
+#: model:ir.ui.menu,name:flous_menu_visibility.menu_visibility_control
+msgid "Visibility Control"
+msgstr "إدارة الإخفاء"

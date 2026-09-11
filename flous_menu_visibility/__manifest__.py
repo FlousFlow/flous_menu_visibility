@@ -27,7 +27,7 @@ Features:
         'security/ir.model.access.csv',
         'security/security.xml',
         'security/journal_rules.xml',
-        'views/res_users_views.xml',
+        'views/visibility_control_views.xml',
         'views/ir_ui_menu_views.xml',
         'views/field_hide_rule_views.xml',
         'views/stock_warehouse_views.xml',

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_visibility_control" name="Visibility Control"
+              parent="base.menu_administration" groups="base.group_system"
+              sequence="95"/>
+
+    <record id="view_visibility_menu_list" model="ir.ui.view">
+        <field name="name">ir.ui.menu.visibility.list</field>
+        <field name="model">ir.ui.menu</field>
+        <field name="arch" type="xml">
+            <list string="Hidden Menus">
+                <field name="name"/>
+                <field name="parent_id"/>
+                <field name="restricted_user_ids" widget="many2many_tags"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_visibility_menu" model="ir.actions.act_window">
+        <field name="name">Hidden Menus</field>
+        <field name="res_model">ir.ui.menu</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_visibility_menu_list"/>
+    </record>
+    <menuitem id="menu_visibility_menus" name="Hidden Menus"
+              parent="menu_visibility_control" action="action_visibility_menu"
+              groups="base.group_system" sequence="10"/>
+
+    <record id="view_visibility_journal_list" model="ir.ui.view">
+        <field name="name">account.journal.visibility.list</field>
+        <field name="model">account.journal</field>
+        <field name="arch" type="xml">
+            <list string="Hidden Journals">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="type"/>
+                <field name="restricted_user_ids" widget="many2many_tags"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_visibility_journal" model="ir.actions.act_window">
+        <field name="name">Hidden Journals</field>
+        <field name="res_model">account.journal</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_visibility_journal_list"/>
+    </record>
+    <menuitem id="menu_visibility_journals" name="Hidden Journals"
+              parent="menu_visibility_control" action="action_visibility_journal"
+              groups="base.group_system" sequence="20"/>
+
+    <record id="view_visibility_warehouse_list" model="ir.ui.view">
+        <field name="name">stock.warehouse.visibility.list</field>
+        <field name="model">stock.warehouse</field>
+        <field name="arch" type="xml">
+            <list string="Warehouse Visibility">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="company_id"/>
+                <field name="visible_user_ids" widget="many2many_tags"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_visibility_warehouse" model="ir.actions.act_window">
+        <field name="name">Warehouse Visibility</field>
+        <field name="res_model">stock.warehouse</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_visibility_warehouse_list"/>
+    </record>
+    <menuitem id="menu_visibility_warehouses" name="Warehouse Visibility"
+              parent="menu_visibility_control" action="action_visibility_warehouse"
+              groups="base.group_system" sequence="30"/>
+</odoo>
