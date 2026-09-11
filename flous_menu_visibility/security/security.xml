@@ -47,4 +47,24 @@
         <field name="perm_create" eval="False"/>
         <field name="perm_unlink" eval="False"/>
     </record>
+
+    <!-- System administrators always retain full warehouse visibility. -->
+    <record id="picking_warehouse_visibility_admin_rule" model="ir.rule">
+        <field name="name">Picking warehouse visibility: administrator</field>
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+    <record id="move_warehouse_visibility_admin_rule" model="ir.rule">
+        <field name="name">Move warehouse visibility: administrator</field>
+        <field name="model_id" ref="stock.model_stock_move"/>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+    <record id="move_line_warehouse_visibility_admin_rule" model="ir.rule">
+        <field name="name">Move line warehouse visibility: administrator</field>
+        <field name="model_id" ref="stock.model_stock_move_line"/>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
 </odoo>

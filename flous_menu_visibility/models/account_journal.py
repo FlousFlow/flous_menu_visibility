@@ -29,11 +29,12 @@ class AccountJournal(models.Model):
             # ir.rule domains are cached per user (uid). Invalidate the
             # registry cache so the new restrictions apply immediately.
             self.env.registry.clear_cache()
-            # Defense in depth: the administrator is never restricted.
+            # Defense in depth: every system administrator is never restricted.
             if not self.env.context.get('flous_skip_admin_guard'):
-                admin = self.env.ref('base.user_admin')
-                restricted = self.filtered(lambda j: admin in j.restricted_user_ids)
-                if restricted:
-                    restricted.with_context(flous_skip_admin_guard=True).sudo().write(
-                        {'restricted_user_ids': [(3, admin.id)]})
+                for journal in self:
+                    admins = journal.restricted_user_ids.filtered(
+                        lambda user: user.has_group('base.group_system'))
+                    if admins:
+                        journal.with_context(flous_skip_admin_guard=True).sudo().write(
+                            {'restricted_user_ids': [(3, uid) for uid in admins.ids]})
         return res
