@@ -2,7 +2,7 @@
 # Copyright 2026 Flous Flow
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
-from odoo import _, api, fields, models
+from odoo import _, _lt, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -57,8 +57,8 @@ class FlousFieldHideRule(models.Model):
 
     _model_field_unique = models.Constraint(
         'unique(model_id, field_id)',
-        _('A rule for this model/field already exists. Edit the existing rule '
-          'to change the list of users instead of creating a duplicate.'),
+        _lt('A rule for this model/field already exists. Edit the existing rule '
+            'to change the list of users instead of creating a duplicate.'),
     )
 
     @api.constrains('model_id', 'field_id')
