@@ -11,10 +11,11 @@
 Hide menus, fields, warehouse operations and accounting journals per user.
 
 Features:
-- Hide menu items per user (user form "Hidden Menus" page, or from the menu itself).
-- Hide any field of any model per user (Settings > Field Visibility Rules).
+- Configure all visibility controls globally from Settings > Visibility Control.
+- Hide menu items per user from the central Hidden Menus list.
+- Hide any field of any model per user from the central Field Visibility Rules list.
 - Restrict warehouse operations per user (Warehouse Visibility group): users in the
-  group only see operations of the warehouses listed on their user record.
+  group only see operations of the warehouses listed in Visibility Control.
 - Hide accounting journals per user with real record rules: a restricted user cannot
   read the journal, its entries (account.move) or their lines (account.move.line).
 - System administrators always see everything.

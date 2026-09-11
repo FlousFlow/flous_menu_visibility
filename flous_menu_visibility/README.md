@@ -6,8 +6,10 @@ journals per user.
 
 ## Features
 
-- **Hide menus per user** — configure from the user form or the menu form
-  (both stay in sync).
+- **Central Visibility Control** — configure menus, fields, journals and
+  warehouses from **Settings → Visibility Control**. Rules are not exposed
+  as tabs on individual user forms.
+- **Hide menus per user** — select restricted users from the central menu list.
 - **Hide fields per user** — e.g. hide `list_price` (sale price) or
   `standard_price` (cost price) on the product form from specific users.
 - **Restrict warehouse operations per user** — users in the "Warehouse
@@ -63,11 +65,9 @@ warehouse's operations**.
 
 ### How to use
 
-1. **Settings → Users & Companies → Users**, open the warehouse operator.
-2. Add them to the **Warehouse Visibility** group (Settings → Users →
-   Groups → Warehouse Visibility).
-3. On the **Visible Warehouses** page, select the warehouses whose operations
-   they may see.
+1. Open **Settings → Visibility Control → Warehouse Visibility**.
+2. Add the operator to the **Warehouse Visibility** group.
+3. On each warehouse row, select the users allowed to see its operations.
 
 From then on, that user only sees operations (receipts, deliveries, internal
 transfers) of those warehouses — not in the Operations dashboard, not in the
@@ -93,13 +93,11 @@ the restriction is not neutralized. The rules apply to **read** only.
 
 ### How to use
 
-1. **Settings → Users & Companies → Users**, open a user.
-2. On the **Hidden Journals** page (admins only), add the journals to hide
-   for that user.
+1. Open **Settings → Visibility Control → Hidden Journals**.
+2. On each journal row, select the users for whom it must be hidden.
 
-Alternatively, open **Accounting → Configuration → Journals**, and on the
-**Restricted Users** tab pick the users that must not see the journal. Both
-sides stay in sync natively.
+The journal form's **Restricted Users** field remains synchronized with this
+central list.
 
 ### Technical notes
 
@@ -121,21 +119,21 @@ never restricted. The rules apply to **read** only.
 
 ```bash
 # from the Odoo source directory (installs the `stock` and `account` deps too)
-./odoo-bin -c odoo.conf -d odoo18 -i flous_menu_visibility --stop-after-init
+./odoo-bin -c odoo.conf -d odoo19 -i flous_menu_visibility --stop-after-init
 ```
 
 To upgrade an already-installed copy:
 
 ```bash
-./odoo-bin -c odoo.conf -d odoo18 -u flous_menu_visibility --stop-after-init
+./odoo-bin -c odoo.conf -d odoo19 -u flous_menu_visibility --stop-after-init
 ```
 
 ## Manual test checklist
 
 ### Menus
 - [ ] Module installs/upgrades without errors.
-- [ ] Internal (non-admin) user form shows the "Hidden Menus" page.
-- [ ] Adding a menu in the user form also shows the user on the menu form (and vice versa).
+- [ ] **Settings → Visibility Control → Hidden Menus** is visible to administrators.
+- [ ] Adding a restricted user on a menu updates the inverse field (and vice versa).
 - [ ] The restricted user no longer sees the menu after reload; other users and the admin still do.
 
 ### Fields
@@ -153,7 +151,7 @@ To upgrade an already-installed copy:
 - [ ] Removing the user from the group restores full visibility.
 
 ### Journals
-- [ ] User form shows the "Hidden Journals" page (admins only).
+- [ ] **Settings → Visibility Control → Hidden Journals** is visible to administrators.
 - [ ] Journal form shows the "Restricted Users" tab (admins only).
 - [ ] Hiding a journal from a user also shows the user on the journal form (and vice versa).
 - [ ] The restricted user no longer sees the journal in Accounting, and cannot open its entries or items.
@@ -163,7 +161,7 @@ To upgrade an already-installed copy:
 ## Automated tests
 
 ```bash
-./odoo-bin -c odoo.conf -d odoo18 -u flous_menu_visibility --test-enable --stop-after-init
+./odoo-bin -c odoo.conf -d odoo19 -u flous_menu_visibility --test-enable --stop-after-init
 ```
 
 ## Known limitations

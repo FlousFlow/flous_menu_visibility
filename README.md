@@ -1,4 +1,4 @@
-# Flous Flow — Odoo 18 Visibility Control
+# Flous Flow — Odoo 19 Visibility Control
 
 Menu, Field, Warehouse & Journal Visibility Control — hide menus, hide
 fields, restrict warehouse operations and hide accounting journals per user.
