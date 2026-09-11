@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="res_groups_privilege_warehouse_visibility" model="res.groups.privilege">
+        <field name="name">Warehouse Visibility</field>
+        <field name="sequence">31</field>
+        <field name="category_id" ref="base.module_category_inventory"/>
+    </record>
+
     <!-- Users added to this group are restricted to the operations of the
          warehouses listed on their user record (visible_warehouse_ids).
          Users outside the group (and system administrators) are unaffected.
@@ -10,6 +16,8 @@
          field must stay readable for group members (it is not group-gated). -->
     <record id="group_warehouse_visibility" model="res.groups">
         <field name="name">Warehouse Visibility</field>
+        <field name="privilege_id" ref="res_groups_privilege_warehouse_visibility"/>
+        <field name="sequence">10</field>
     </record>
 
     <!-- Operations (stock.picking) -->

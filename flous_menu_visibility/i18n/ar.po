@@ -210,8 +210,9 @@ msgstr "المستخدمون الظاهرون"
 
 #. module: flous_menu_visibility
 #: model:res.groups,name:flous_menu_visibility.group_warehouse_visibility
+#: model:res.groups.privilege,name:flous_menu_visibility.res_groups_privilege_warehouse_visibility
 msgid "Warehouse Visibility"
-msgstr "رؤية المخازن"
+msgstr "صلاحية رؤية المخازن"
 
 #. module: flous_menu_visibility
 #: model:ir.model.fields,help:flous_menu_visibility.field_res_users__visible_warehouse_ids

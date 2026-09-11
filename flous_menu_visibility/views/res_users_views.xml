@@ -7,21 +7,19 @@
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
                 <page name="hidden_menus" string="Hidden Menus"
-                      invisible="is_admin or not is_internal_user">
+                      groups="base.group_system">
                     <field name="hidden_menu_ids"/>
                 </page>
             </xpath>
             <xpath expr="//notebook" position="inside">
                 <page name="visible_warehouses" string="Visible Warehouses"
-                      groups="base.group_system"
-                      invisible="is_admin">
+                      groups="base.group_system">
                     <field name="visible_warehouse_ids"/>
                 </page>
             </xpath>
             <xpath expr="//notebook" position="inside">
                 <page name="hidden_journals" string="Hidden Journals"
-                      groups="base.group_system"
-                      invisible="is_admin">
+                      groups="base.group_system">
                     <field name="hidden_journal_ids"/>
                 </page>
             </xpath>
