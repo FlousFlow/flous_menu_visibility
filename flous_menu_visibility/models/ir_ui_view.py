@@ -36,10 +36,13 @@ class IrUiView(models.Model):
         if not rules:
             return tree
 
+        # Ignore incomplete/stale rules defensively.  Rules are editable data
+        # and must never be able to make a view parser crash.
         hidden_fields = {
             rule.field_id.name
             for rule in rules
-            if rule.model_id.model == model_name
+            if rule.field_id and rule.model_id
+            and rule.model_id.model == model_name
         }
         if not hidden_fields:
             return tree

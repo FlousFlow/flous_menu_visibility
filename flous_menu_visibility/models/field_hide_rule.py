@@ -21,10 +21,10 @@ class FlousFieldHideRule(models.Model):
     _order = 'sequence, id'
 
     name = fields.Char(
-        string='Rule Name', required=True, tracking=True,
+        string='Rule Name', required=True,
         help='A short name describing this rule, e.g. "Hide cost price from sales".',
     )
-    active = fields.Boolean(string='Active', default=True, tracking=True)
+    active = fields.Boolean(string='Active', default=True)
     sequence = fields.Integer(string='Sequence', default=10)
 
     model_id = fields.Many2one(
@@ -68,6 +68,21 @@ class FlousFieldHideRule(models.Model):
                     and rule.field_id.model_id != rule.model_id:
                 raise ValidationError(
                     _('The selected field does not belong to the selected model.')
+                )
+
+    @api.constrains('model_id', 'field_id')
+    def _check_field_can_be_hidden(self):
+        """Reject configurations that would make a form impossible to save.
+
+        A required field must remain available to the user (or be filled by
+        code/defaults).  Blocking this configuration is safer than allowing
+        a rule that silently causes a save-time validation error.
+        """
+        for rule in self:
+            if rule.field_id and rule.field_id.required:
+                raise ValidationError(
+                    _('Required fields cannot be hidden because the form may '
+                      'no longer be saveable.')
                 )
 
     @api.onchange('model_id')

@@ -98,3 +98,19 @@ class TestFieldHideRule(TransactionCase):
         self._create_rule([self.test_user.id])
         with self.assertRaises(Exception):
             self._create_rule([self.test_user.id])
+
+    def test_required_field_cannot_be_hidden(self):
+        """Reject rules that would leave a required field unavailable."""
+        required_field = self.env['ir.model.fields'].search([
+            ('model', '=', 'res.partner'), ('name', '=', 'company_id'),
+            ('required', '=', True),
+        ], limit=1)
+        if not required_field:
+            self.skipTest('No required res.partner field available in this DB')
+        with self.assertRaisesRegex(Exception, 'Required fields cannot be hidden'):
+            self.env['flous.field.hide.rule'].create({
+                'name': 'Hide required partner field',
+                'model_id': self.partner_model.id,
+                'field_id': required_field.id,
+                'user_ids': [(6, 0, [self.test_user.id])],
+            })
