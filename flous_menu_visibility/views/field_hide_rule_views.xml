@@ -81,11 +81,11 @@
         <field name="context">{'search_default_active': 1}</field>
     </record>
 
-    <!-- Menu: Settings > Field Visibility Rules (admins only) -->
+    <!-- Menu: Settings > Visibility Control > Field Visibility Rules (admins only) -->
     <menuitem id="menu_field_hide_rule"
               name="Field Visibility Rules"
-              parent="base.menu_administration"
+              parent="menu_visibility_control"
               action="action_field_hide_rule"
               groups="base.group_system"
-              sequence="100"/>
+              sequence="40"/>
 </odoo>
