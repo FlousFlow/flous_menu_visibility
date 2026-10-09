@@ -26,9 +26,9 @@ class AccountJournal(models.Model):
     def write(self, vals):
         res = super().write(vals)
         if 'restricted_user_ids' in vals:
-            # ir.rule domains are cached per user (uid). Invalidate the
+            # ir.access domains are cached per user (uid). Invalidate the
             # registry cache so the new restrictions apply immediately.
-            self.env.registry.clear_cache()
+            self.env.transaction.invalidate_access_cache()
             # Defense in depth: every system administrator is never restricted.
             if not self.env.context.get('flous_skip_admin_guard'):
                 for journal in self:

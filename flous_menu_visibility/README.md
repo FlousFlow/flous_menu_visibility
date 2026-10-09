@@ -46,7 +46,7 @@ list of users for whom the field must be hidden.
 | `user_ids` | Users for whom the field is hidden (admins are excluded)|
 | `active`   | Archive the rule to disable it                          |
 
-Odoo 18 renders every view through `ir.ui.view.get_view()` →
+Odoo 20 renders every view through `ir.ui.view.get_view()` →
 `_postprocess_access_rights()`. This module overrides
 `_postprocess_access_rights` and, for the current user, sets
 `invisible="1"` on every `<field>` node matching an active rule for that
@@ -80,9 +80,9 @@ always see everything.
 |---------------------|-------------------------------------------------------|---------------------------------|
 | `res.users`         | `visible_warehouse_ids` (M2M → `stock.warehouse`)      | Warehouses the user may see     |
 | `stock.warehouse`   | `visible_user_ids` (M2M → `res.users`)                 | Inverse side (same table)       |
-| `stock.picking`     | `ir.rule` `picking_warehouse_visibility_rule`          | Hides operations of other warehouses |
-| `stock.move`        | `ir.rule` `move_warehouse_visibility_rule`             | Hides moves of other warehouses |
-| `stock.move.line`   | `ir.rule` `move_line_warehouse_visibility_rule`        | Hides move lines of other warehouses |
+| `stock.picking`     | `ir.access` `picking_warehouse_visibility_rule`        | Hides operations of other warehouses |
+| `stock.move`        | `ir.access` `move_warehouse_visibility_rule`           | Hides moves of other warehouses |
+| `stock.move.line`   | `ir.access` `move_line_warehouse_visibility_rule`      | Hides move lines of other warehouses |
 
 The three rules are **group rules** on the `Warehouse Visibility` group and
 filter by the user's `visible_warehouse_ids`. Stock ships no permissive
@@ -105,9 +105,9 @@ central list.
 |--------------------|-------------------------------------------|-----------------------------------|
 | `res.users`        | `hidden_journal_ids` (M2M → `account.journal`) | Journals hidden for the user |
 | `account.journal`  | `restricted_user_ids` (M2M → `res.users`) | Inverse side (same table)         |
-| `account.journal`  | `ir.rule` `journal_visibility_rule`        | Hides journals where the user is restricted |
-| `account.move`     | `ir.rule` `move_visibility_rule`           | Hides entries of hidden journals  |
-| `account.move.line`| `ir.rule` `move_line_visibility_rule`      | Hides items of hidden journals    |
+| `account.journal`  | `ir.access` `journal_visibility_rule`      | Hides journals where the user is restricted |
+| `account.move`     | `ir.access` `move_visibility_rule`         | Hides entries of hidden journals  |
+| `account.move.line`| `ir.access` `move_line_visibility_rule`   | Hides items of hidden journals    |
 
 The three rules are **global rules** (AND-ed with every group rule), so
 permissive "see-all" group rules from `account` cannot neutralize them.
@@ -119,13 +119,13 @@ never restricted. The rules apply to **read** only.
 
 ```bash
 # from the Odoo source directory (installs the `stock` and `account` deps too)
-./odoo-bin -c odoo.conf -d odoo19 -i flous_menu_visibility --stop-after-init
+./odoo-bin -c odoo.conf -d odoo20 -i flous_menu_visibility --stop-after-init
 ```
 
 To upgrade an already-installed copy:
 
 ```bash
-./odoo-bin -c odoo.conf -d odoo19 -u flous_menu_visibility --stop-after-init
+./odoo-bin -c odoo.conf -d odoo20 -u flous_menu_visibility --stop-after-init
 ```
 
 ## Manual test checklist
@@ -161,7 +161,7 @@ To upgrade an already-installed copy:
 ## Automated tests
 
 ```bash
-./odoo-bin -c odoo.conf -d odoo19 -u flous_menu_visibility --test-enable --stop-after-init
+./odoo-bin -c odoo.conf -d odoo20 -u flous_menu_visibility --test-enable --stop-after-init
 ```
 
 ## Known limitations

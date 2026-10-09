@@ -3,76 +3,36 @@
     <record id="res_groups_privilege_warehouse_visibility" model="res.groups.privilege">
         <field name="name">Warehouse Visibility</field>
         <field name="sequence">31</field>
-        <field name="category_id" ref="base.module_category_inventory"/>
+        <field name="category_id" ref="base.module_category_supply_chain"/>
     </record>
 
-    <!-- Users added to this group are restricted to the operations of the
-         warehouses listed on their user record (visible_warehouse_ids).
-         Users outside the group (and system administrators) are unaffected.
-         These are GROUP rules: Odoo ORs group rules within the user's
-         groups, and stock has no permissive per-user group rules on these
-         models (only company-based global rules), so the restriction holds.
-         Note: the rule domain references user.visible_warehouse_ids, so that
-         field must stay readable for group members (it is not group-gated). -->
     <record id="group_warehouse_visibility" model="res.groups">
         <field name="name">Warehouse Visibility</field>
         <field name="privilege_id" ref="res_groups_privilege_warehouse_visibility"/>
         <field name="sequence">10</field>
     </record>
 
-    <!-- Operations (stock.picking) -->
-    <record id="picking_warehouse_visibility_rule" model="ir.rule">
+    <!-- Odoo 20 replaces ir.rule with ir.access. These global restrictions
+         preserve the old read-only warehouse visibility behavior while the
+         conditional domain leaves non-members and administrators unrestricted. -->
+    <record id="picking_warehouse_visibility_rule" model="ir.access">
         <field name="name">Picking warehouse visibility (Flous Flow)</field>
         <field name="model_id" ref="stock.model_stock_picking"/>
-        <field name="groups" eval="[(4, ref('group_warehouse_visibility'))]"/>
-        <field name="domain_force">[('picking_type_id.warehouse_id', 'in', user.visible_warehouse_ids.ids)]</field>
-        <field name="perm_read" eval="True"/>
-        <field name="perm_write" eval="False"/>
-        <field name="perm_create" eval="False"/>
-        <field name="perm_unlink" eval="False"/>
+        <field name="operation">r</field>
+        <field name="domain">[('picking_type_id.warehouse_id', 'in', user.visible_warehouse_ids.ids)] if user.has_group('flous_menu_visibility.group_warehouse_visibility') and not user.has_group('base.group_system') else [('id', '!=', False)]</field>
     </record>
 
-    <!-- Stock moves (stock.move) -->
-    <record id="move_warehouse_visibility_rule" model="ir.rule">
+    <record id="move_warehouse_visibility_rule" model="ir.access">
         <field name="name">Move warehouse visibility (Flous Flow)</field>
         <field name="model_id" ref="stock.model_stock_move"/>
-        <field name="groups" eval="[(4, ref('group_warehouse_visibility'))]"/>
-        <field name="domain_force">[('picking_id.picking_type_id.warehouse_id', 'in', user.visible_warehouse_ids.ids)]</field>
-        <field name="perm_read" eval="True"/>
-        <field name="perm_write" eval="False"/>
-        <field name="perm_create" eval="False"/>
-        <field name="perm_unlink" eval="False"/>
+        <field name="operation">r</field>
+        <field name="domain">[('picking_id.picking_type_id.warehouse_id', 'in', user.visible_warehouse_ids.ids)] if user.has_group('flous_menu_visibility.group_warehouse_visibility') and not user.has_group('base.group_system') else [('id', '!=', False)]</field>
     </record>
 
-    <!-- Move lines (stock.move.line) -->
-    <record id="move_line_warehouse_visibility_rule" model="ir.rule">
+    <record id="move_line_warehouse_visibility_rule" model="ir.access">
         <field name="name">Move line warehouse visibility (Flous Flow)</field>
         <field name="model_id" ref="stock.model_stock_move_line"/>
-        <field name="groups" eval="[(4, ref('group_warehouse_visibility'))]"/>
-        <field name="domain_force">[('picking_id.picking_type_id.warehouse_id', 'in', user.visible_warehouse_ids.ids)]</field>
-        <field name="perm_read" eval="True"/>
-        <field name="perm_write" eval="False"/>
-        <field name="perm_create" eval="False"/>
-        <field name="perm_unlink" eval="False"/>
-    </record>
-
-    <!-- System administrators always retain full warehouse visibility. -->
-    <record id="picking_warehouse_visibility_admin_rule" model="ir.rule">
-        <field name="name">Picking warehouse visibility: administrator</field>
-        <field name="model_id" ref="stock.model_stock_picking"/>
-        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
-        <field name="domain_force">[(1, '=', 1)]</field>
-    </record>
-    <record id="move_warehouse_visibility_admin_rule" model="ir.rule">
-        <field name="name">Move warehouse visibility: administrator</field>
-        <field name="model_id" ref="stock.model_stock_move"/>
-        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
-        <field name="domain_force">[(1, '=', 1)]</field>
-    </record>
-    <record id="move_line_warehouse_visibility_admin_rule" model="ir.rule">
-        <field name="name">Move line warehouse visibility: administrator</field>
-        <field name="model_id" ref="stock.model_stock_move_line"/>
-        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
-        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="operation">r</field>
+        <field name="domain">[('picking_id.picking_type_id.warehouse_id', 'in', user.visible_warehouse_ids.ids)] if user.has_group('flous_menu_visibility.group_warehouse_visibility') and not user.has_group('base.group_system') else [('id', '!=', False)]</field>
     </record>
 </odoo>
