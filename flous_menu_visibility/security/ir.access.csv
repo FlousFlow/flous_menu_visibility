@@ -1,0 +1,2 @@
+id,name,model_id,group_id/id,operation,domain
+access_field_hide_rule_system,field.hide.rule.system,flous.field.hide.rule,base.group_system,crud,

@@ -8,7 +8,7 @@ from odoo import models
 class IrUiView(models.Model):
     """Hide fields for specific users at view-render time.
 
-    Odoo 18 calls ``_postprocess_access_rights`` once per requested view,
+    Odoo 20 calls ``_postprocess_access_rights`` once per requested view,
     on the *combined* arch, *after* the (group-based) cache is read. This
     makes it the ideal single hook for per-user field visibility: the change
     is applied per request, so the shared view cache is never polluted.

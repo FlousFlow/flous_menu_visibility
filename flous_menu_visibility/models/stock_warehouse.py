@@ -27,7 +27,7 @@ class StockWarehouse(models.Model):
     def write(self, vals):
         res = super().write(vals)
         if 'visible_user_ids' in vals:
-            # ir.rule domains are cached per user (uid). Invalidate the
+            # ir.access domains are cached per user (uid). Invalidate the
             # registry cache so the new restrictions apply immediately.
-            self.env.registry.clear_cache()
+            self.env.transaction.invalidate_access_cache()
         return res

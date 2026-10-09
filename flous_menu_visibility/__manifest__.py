@@ -4,7 +4,7 @@
 
 {
     'name': 'Menu, Field, Warehouse & Journal Visibility Control',
-    'version': '19.0.1.1.0',
+    'version': '20.0.1.1.0',
     'category': 'Technical',
     'summary': 'Hide menus, fields, warehouse operations and accounting journals per user.',
     'description': """
@@ -25,7 +25,7 @@ Features:
     'maintainer': 'Flous Flow',
     'depends': ['base', 'stock', 'account'],
     'data': [
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
         'security/security.xml',
         'security/journal_rules.xml',
         'views/visibility_control_views.xml',
