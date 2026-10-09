@@ -15,7 +15,7 @@ journals per user.
 - **Restrict warehouse operations per user** — users in the "Warehouse
   Visibility" group only see operations of their assigned warehouses.
 - **Hide accounting journals per user** — a restricted user cannot read the
-  journal, its entries or their lines (real record rules, not just UI).
+  journal, its entries or their lines (server-side access restrictions, not just UI).
 - Hiding a field sets `invisible="1"` on the view node — the value stays
   loaded, so view expressions/domains keep working and **the view is never
   broken**.

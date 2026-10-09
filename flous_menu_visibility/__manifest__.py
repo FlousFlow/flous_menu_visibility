@@ -16,7 +16,7 @@ Features:
 - Hide any field of any model per user from the central Field Visibility Rules list.
 - Restrict warehouse operations per user (Warehouse Visibility group): users in the
   group only see operations of the warehouses listed in Visibility Control.
-- Hide accounting journals per user with real record rules: a restricted user cannot
+- Hide accounting journals per user with Odoo 20 access restrictions: a restricted user cannot
   read the journal, its entries (account.move) or their lines (account.move.line).
 - System administrators always see everything.
 """,
