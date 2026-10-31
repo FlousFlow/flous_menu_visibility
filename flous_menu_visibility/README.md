@@ -9,6 +9,9 @@ journals per user.
 - **Central Visibility Control** — configure menus, fields, journals and
   warehouses from **Settings → Visibility Control**. Rules are not exposed
   as tabs on individual user forms.
+- **Pick from the interface** — system administrators can enable **Visibility**
+  in the systray, point at a menu item, form field, or list column, and choose
+  the internal users who should not see it.
 - **Hide menus per user** — select restricted users from the central menu list.
 - **Hide fields per user** — e.g. hide `list_price` (sale price) or
   `standard_price` (cost price) on the product form from specific users.
@@ -20,6 +23,33 @@ journals per user.
   loaded, so view expressions/domains keep working and **the view is never
   broken**.
 - System administrators (`base.group_system`) always see everything.
+- Menu and field visibility affect the interface. They do not secure the
+  underlying field value from exports, reports, RPC or other server-side
+  access; use Odoo access rights for confidential data.
+
+### Select an item directly
+
+1. Sign in as a system administrator and open the menu or model view.
+2. Click **Visibility** in the top bar. The button stays active while the
+   pointer highlights selectable items. An on-screen notice explains the
+   current selection controls.
+3. Point at a menu entry, a field on a form, or a column heading in a list and
+   click it. This pauses the interface and opens the user selector.
+   For nested menus, click a parent once to open it, then select a child. To
+   select the parent itself, double-click it or use Alt-click.
+4. Search for internal users in the selector, or use **Select All Internal
+   Users** / **Clear Selection**. The selected-user count updates with the
+   selection. Click **Apply** to save. Applying an empty selection clears the
+   restriction for that menu or field.
+
+The picker creates or updates the same rules managed from **Settings →
+Visibility Control**. It supports menu entries, form fields and list columns.
+Other view elements such as action buttons and labels without an underlying
+field are not selectable in this version.
+
+Administrators can edit or delete field rules from **Settings → Visibility
+Control → Field Visibility Rules**. The list shows each model/field target,
+selected users and the user count.
 
 ## Part 1 — Hide menus
 

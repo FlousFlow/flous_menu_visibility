@@ -53,7 +53,13 @@ class FlousFieldHideRule(models.Model):
         help='Users for whom this field will be hidden. System administrators '
              'always see every field.',
     )
+    user_count = fields.Integer(string='User Count', compute='_compute_user_count')
     notes = fields.Text(string='Notes')
+
+    @api.depends('user_ids')
+    def _compute_user_count(self):
+        for rule in self:
+            rule.user_count = len(rule.user_ids)
 
     _model_field_unique = models.Constraint(
         'unique(model_id, field_id)',

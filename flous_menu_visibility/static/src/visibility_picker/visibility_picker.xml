@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="flous_menu_visibility.VisibilityPickerSystray" owl="1">
+        <button t-if="this.isSystem" type="button"
+                class="o_flous_visibility_picker o_nav_entry px-2"
+                t-att-class="{'active': this.active()}"
+                t-att-aria-pressed="this.active()"
+                t-att-title="this.active() ? 'Cancel item selection' : 'Select an item to hide'"
+                t-on-click="() => this.togglePickerMode()">
+            <i t-att-class="this.active() ? 'fa fa-crosshairs fa-fw me-1' : 'fa fa-eye-slash fa-fw me-1'"
+               aria-hidden="true"/>
+            <span>Visibility</span>
+        </button>
+    </t>
+</templates>

@@ -10,6 +10,7 @@
                 <field name="model_id"/>
                 <field name="field_id"/>
                 <field name="field_string" optional="show"/>
+                <field name="user_count"/>
                 <field name="user_ids" widget="many2many_tags"/>
                 <field name="active" invisible="1"/>
             </list>
@@ -39,7 +40,8 @@
                             <field name="sequence"/>
                         </group>
                     </group>
-                    <separator string="Users"/>
+                    <separator string="Users Hidden from This Field"/>
+                    <field name="user_count" readonly="1"/>
                     <field name="user_ids" widget="many2many_tags"/>
                     <separator string="Notes"/>
                     <field name="notes"

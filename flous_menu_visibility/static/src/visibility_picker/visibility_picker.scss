@@ -1,0 +1,28 @@
+.o_flous_visibility_picker_target {
+    outline: 2px solid #714b67 !important;
+    outline-offset: 2px;
+    cursor: crosshair !important;
+}
+
+body.o_flous_visibility_picker_active,
+body.o_flous_visibility_picker_active * {
+    cursor: crosshair !important;
+}
+
+.o_flous_visibility_picker {
+    // Keep the picker visually consistent with Odoo's native navbar entries.
+    border: 0;
+    font: inherit;
+}
+
+.o_flous_visibility_picker.active {
+    // Odoo's navbar active state uses these variables across themes.
+    color: var(--NavBar-entry-color--active, #fff) !important;
+    background-color: var(--NavBar-entry-backgroundColor--active, rgba(255, 255, 255, 0.18)) !important;
+    border-color: var(--NavBar-entry-borderColor-active, transparent) !important;
+}
+
+.o_flous_visibility_picker:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: -2px;
+}
