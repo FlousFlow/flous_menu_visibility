@@ -43,6 +43,7 @@ msgstr ""
 
 #. module: flous_menu_visibility_pos
 #: model_terms:ir.ui.view,arch_db:flous_menu_visibility_pos.pos_config_view_form_visibility
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility_pos.view_visibility_pos_config_form
 msgid ""
 "Close the active session before restricting this point of sale.\n"
 "                        Existing sessions are never closed automatically."
@@ -69,13 +70,6 @@ msgid "Flous Flow POS Visibility"
 msgstr "إدارة إظهار نقاط البيع - فلوس فلو"
 
 #. module: flous_menu_visibility_pos
-#: model:ir.actions.act_window,name:flous_menu_visibility_pos.action_visibility_pos_config
-#: model:ir.ui.menu,name:flous_menu_visibility_pos.menu_visibility_pos_config
-#: model_terms:ir.ui.view,arch_db:flous_menu_visibility_pos.view_visibility_pos_config_list
-msgid "Hidden Points of Sale"
-msgstr "نقاط البيع المخفية"
-
-#. module: flous_menu_visibility_pos
 #: model:ir.module.module,summary:base.module_flous_menu_visibility_pos
 msgid "Hide selected points of sale from specific users."
 msgstr "إخفاء نقاط البيع المحددة عن مستخدمين بعينهم."
@@ -94,6 +88,11 @@ msgid "ID"
 msgstr "المعرّف"
 
 #. module: flous_menu_visibility_pos
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility_pos.view_visibility_pos_config_form
+msgid "Point of Sale"
+msgstr "نقطة البيع"
+
+#. module: flous_menu_visibility_pos
 #: model:ir.model,name:flous_menu_visibility_pos.model_pos_config
 msgid "Point of Sale Configuration"
 msgstr "إعداد نقطة البيع"
@@ -102,6 +101,14 @@ msgstr "إعداد نقطة البيع"
 #: model:ir.model,name:flous_menu_visibility_pos.model_pos_session
 msgid "Point of Sale Session"
 msgstr "جلسة نقطة البيع"
+
+#. module: flous_menu_visibility_pos
+#: model:ir.actions.act_window,name:flous_menu_visibility_pos.action_visibility_pos_config
+#: model:ir.ui.menu,name:flous_menu_visibility_pos.menu_visibility_pos_config
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility_pos.view_visibility_pos_config_form
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility_pos.view_visibility_pos_config_list
+msgid "Point of Sale Visibility"
+msgstr "إدارة إظهار نقاط البيع"
 
 #. modules: flous_menu_visibility, flous_menu_visibility_pos
 #: model:ir.model.fields,field_description:flous_menu_visibility.field_account_journal__restricted_user_ids
@@ -118,6 +125,20 @@ msgstr "المستخدمون المقيّدون"
 #: model_terms:ir.ui.view,arch_db:flous_menu_visibility_pos.view_visibility_pos_config_kanban
 msgid "Restricted users"
 msgstr "المستخدمون المقيّدون"
+
+#. module: flous_menu_visibility_pos
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility_pos.view_visibility_pos_config_form
+msgid ""
+"Select the internal users who must not see or start this point of sale.\n"
+"                        System administrators always retain access."
+msgstr ""
+"حدد المستخدمين الداخليين الممنوعين من رؤية نقطة البيع أو تشغيلها. يحتفظ "
+"مديرو النظام بإمكانية الوصول دائمًا."
+
+#. module: flous_menu_visibility_pos
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility_pos.view_visibility_pos_config_form
+msgid "Select users who must not see this point of sale..."
+msgstr "حدد المستخدمين الممنوعين من رؤية نقطة البيع..."
 
 #. module: flous_menu_visibility_pos
 #: model:ir.model.fields,help:flous_menu_visibility_pos.field_pos_config__restricted_user_ids

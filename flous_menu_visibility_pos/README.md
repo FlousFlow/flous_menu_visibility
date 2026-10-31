@@ -7,14 +7,16 @@ used on its own.
 
 ## Configure
 
-1. Open **Settings → Visibility Control → Hidden Points of Sale** after Odoo
+1. Open **Settings → Visibility Control → Point of Sale Visibility** after Odoo
    installs both the core addon and Point of Sale.
-2. Open a POS configuration and select the internal users who must not see or
-   start it. The same field is available on the POS configuration's **Visibility**
-   tab.
+2. Choose an existing POS configuration from the list and select the internal
+   users who must not see or start it. This screen does not create POS
+   configurations. The same field is available on the POS configuration's
+   **Visibility** tab.
 
-The **Hidden Points of Sale** list uses compact cards on phones and a sortable
-table on wider screens.
+The **Point of Sale Visibility** list shows all configured points of sale,
+including ones that are not restricted yet. It uses compact cards on phones and
+a sortable table on wider screens.
 
 Restricted configurations are removed from the POS dashboard. The regular
 backend launch action and direct `/pos/ui/<id>` URLs are also blocked for the
