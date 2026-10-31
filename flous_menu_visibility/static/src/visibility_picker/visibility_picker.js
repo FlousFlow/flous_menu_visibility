@@ -38,7 +38,7 @@ export class VisibilityPickerSystray extends Component {
             document.addEventListener("pointerout", this.onPointerOut, true);
             document.addEventListener("click", this.onDocumentClick, true);
             document.body.classList.add("o_flous_visibility_picker_active");
-            this.notification.add(
+            this.pickerNotificationClose = this.notification.add(
                 "Click a field or list column to select it. Click a parent menu once to open it; double-click or Alt-click to select the parent menu.",
                 { type: "info", sticky: true, title: "Visibility selection is active" },
             );
@@ -48,6 +48,8 @@ export class VisibilityPickerSystray extends Component {
             document.removeEventListener("click", this.onDocumentClick, true);
             document.body.classList.remove("o_flous_visibility_picker_active");
             this.clearHighlight();
+            this.pickerNotificationClose?.();
+            this.pickerNotificationClose = null;
         }
     }
 

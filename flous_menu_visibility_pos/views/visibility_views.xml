@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_visibility_pos_config_list" model="ir.ui.view">
+        <field name="name">pos.config.visibility.list</field>
+        <field name="model">pos.config</field>
+        <field name="arch" type="xml">
+            <list string="Hidden Points of Sale">
+                <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="restricted_user_ids" widget="many2many_tags"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_visibility_pos_config_kanban" model="ir.ui.view">
+        <field name="name">pos.config.visibility.kanban</field>
+        <field name="model">pos.config</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="card" class="d-flex flex-column gap-2">
+                        <field name="name" class="fw-bold fs-5"/>
+                        <field name="company_id" class="text-muted"
+                               groups="base.group_multi_company"/>
+                        <div>
+                            <div class="text-muted small mb-1">Restricted users</div>
+                            <field name="restricted_user_ids" widget="many2many_tags"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_visibility_pos_config" model="ir.actions.act_window">
+        <field name="name">Hidden Points of Sale</field>
+        <field name="res_model">pos.config</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="mobile_view_mode">kanban</field>
+        <field name="view_id" ref="view_visibility_pos_config_list"/>
+        <field name="domain">[('restricted_user_ids', '!=', False)]</field>
+    </record>
+    <record id="action_visibility_pos_config_list_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_visibility_pos_config_list"/>
+        <field name="act_window_id" ref="action_visibility_pos_config"/>
+    </record>
+    <record id="action_visibility_pos_config_kanban_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="view_visibility_pos_config_kanban"/>
+        <field name="act_window_id" ref="action_visibility_pos_config"/>
+    </record>
+
+    <menuitem id="menu_visibility_pos_config"
+              name="Hidden Points of Sale"
+              parent="flous_menu_visibility.menu_visibility_control"
+              action="action_visibility_pos_config"
+              groups="base.group_system"
+              sequence="50"/>
+</odoo>

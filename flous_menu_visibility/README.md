@@ -19,6 +19,9 @@ journals per user.
   Visibility" group only see operations of their assigned warehouses.
 - **Hide accounting journals per user** — a restricted user cannot read the
   journal, its entries or their lines (server-side access restrictions, not just UI).
+- **Responsive admin screens** — the visibility lists use readable cards on
+  phones and retain sortable tables on wider screens. User assignments wrap
+  cleanly, and the field picker dialog keeps its actions visible on small screens.
 - Hiding a field sets `invisible="1"` on the view node — the value stays
   loaded, so view expressions/domains keep working and **the view is never
   broken**.
@@ -50,6 +53,12 @@ field are not selectable in this version.
 Administrators can edit or delete field rules from **Settings → Visibility
 Control → Field Visibility Rules**. The list shows each model/field target,
 selected users and the user count.
+
+For databases that use Odoo Point of Sale, install the optional companion addon
+`flous_menu_visibility_pos` from this repository. It adds **Hidden Points of
+Sale** under **Settings → Visibility Control** without installing Point of Sale
+as a dependency of the core visibility addon. Close active sessions before
+restricting a POS configuration.
 
 ## Part 1 — Hide menus
 

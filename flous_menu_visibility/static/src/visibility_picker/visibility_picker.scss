@@ -26,3 +26,15 @@ body.o_flous_visibility_picker_active * {
     outline: 2px solid currentColor;
     outline-offset: -2px;
 }
+
+@media (max-width: 575.98px) {
+    .o_flous_visibility_user_actions {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .o_flous_visibility_user_actions .btn {
+        width: 100%;
+        white-space: normal;
+    }
+}
