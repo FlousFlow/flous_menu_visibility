@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { Component, onWillDestroy, signal } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -24,6 +25,10 @@ export class VisibilityPickerSystray extends Component {
         return user.isSystem;
     }
 
+    get pickerTitle() {
+        return this.active() ? _t("Cancel item selection") : _t("Select an item to hide");
+    }
+
     togglePickerMode() {
         this.setPickerMode(!this.active());
     }
@@ -39,8 +44,8 @@ export class VisibilityPickerSystray extends Component {
             document.addEventListener("click", this.onDocumentClick, true);
             document.body.classList.add("o_flous_visibility_picker_active");
             this.pickerNotificationClose = this.notification.add(
-                "Click a field or list column to select it. Click a parent menu once to open it; double-click or Alt-click to select the parent menu.",
-                { type: "info", sticky: true, title: "Visibility selection is active" },
+                _t("Click a field or list column to select it. Click a parent menu once to open it; double-click or Alt-click to select the parent menu."),
+                { type: "info", sticky: true, title: _t("Visibility selection is active") },
             );
         } else {
             document.removeEventListener("pointerover", this.onPointerOver, true);
@@ -141,7 +146,7 @@ export class VisibilityPickerSystray extends Component {
                 );
             await this.action.doAction(action);
         } catch (error) {
-            this.notification.add(error.message || "Could not open visibility settings.", {
+            this.notification.add(error.message || _t("Could not open visibility settings."), {
                 type: "danger",
             });
         }
