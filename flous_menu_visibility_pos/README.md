@@ -1,14 +1,15 @@
 # Flous Flow POS Visibility
 
-Optional integration for `flous_menu_visibility`. Install this addon only on
-databases that use Odoo Point of Sale. It depends on both the core visibility
-addon and `point_of_sale`.
+Optional integration for `flous_menu_visibility`. Odoo installs this addon
+automatically when both the core visibility addon and `point_of_sale` are
+installed. It does not install Point of Sale when the core visibility addon is
+used on its own.
 
 ## Configure
 
-1. Install **Flous Flow POS Visibility** from Apps.
-2. Open **Settings → Visibility Control → Hidden Points of Sale**.
-3. Open a POS configuration and select the internal users who must not see or
+1. Open **Settings → Visibility Control → Hidden Points of Sale** after Odoo
+   installs both the core addon and Point of Sale.
+2. Open a POS configuration and select the internal users who must not see or
    start it. The same field is available on the POS configuration's **Visibility**
    tab.
 

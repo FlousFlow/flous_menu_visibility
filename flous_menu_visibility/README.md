@@ -54,11 +54,13 @@ Administrators can edit or delete field rules from **Settings → Visibility
 Control → Field Visibility Rules**. The list shows each model/field target,
 selected users and the user count.
 
-For databases that use Odoo Point of Sale, install the optional companion addon
-`flous_menu_visibility_pos` from this repository. It adds **Hidden Points of
-Sale** under **Settings → Visibility Control** without installing Point of Sale
-as a dependency of the core visibility addon. Close active sessions before
-restricting a POS configuration.
+The optional companion addon `flous_menu_visibility_pos` is installed
+automatically when both this module and Odoo Point of Sale are installed. It adds
+**Hidden Points of Sale** under **Settings → Visibility Control** without making
+Point of Sale a dependency of this core addon. Databases that already had both
+modules installed before this automatic integration was added may need a
+one-time installation of **Flous Flow POS Visibility** from Apps. Close active
+sessions before restricting a POS configuration.
 
 ## Part 1 — Hide menus
 

@@ -4,11 +4,12 @@
 
 {
     'name': 'Flous Flow POS Visibility',
-    'version': '20.0.1.0.1',
+    'version': '20.0.1.0.2',
     'category': 'Point of Sale',
     'summary': 'Hide selected points of sale from specific users.',
     'description': """
 Optional integration for Menu, Field, Warehouse & Journal Visibility Control.
+It installs automatically when both this module and Odoo Point of Sale are installed.
 
 Administrators can restrict a POS configuration for selected internal users.
 Restricted configurations are removed from the POS dashboard, and starting
@@ -27,6 +28,6 @@ not close sessions or interfere with orders.
     ],
     'license': 'LGPL-3',
     'installable': True,
-    'auto_install': False,
+    'auto_install': True,
     'application': False,
 }
