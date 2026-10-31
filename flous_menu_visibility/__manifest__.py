@@ -4,14 +4,16 @@
 
 {
     'name': 'Menu, Field, Warehouse & Journal Visibility Control',
-    'version': '20.0.1.1.0',
+    'version': '20.0.1.3.0',
     'category': 'Technical',
-    'summary': 'Hide menus, fields, warehouse operations and accounting journals per user.',
+    'summary': 'Hide menus and fields per user with a visual picker and access controls.',
     'description': """
 Hide menus, fields, warehouse operations and accounting journals per user.
 
 Features:
 - Configure all visibility controls globally from Settings > Visibility Control.
+- Select a visible menu or field from the interface, then choose affected users.
+- Search users, select all internal users, or clear the selection in one click.
 - Hide menu items per user from the central Hidden Menus list.
 - Hide any field of any model per user from the central Field Visibility Rules list.
 - Restrict warehouse operations per user (Warehouse Visibility group): users in the
@@ -19,6 +21,10 @@ Features:
 - Hide accounting journals per user with Odoo 20 access restrictions: a restricted user cannot
   read the journal, its entries (account.move) or their lines (account.move.line).
 - System administrators always see everything.
+
+Menu and field visibility rules control what appears in the interface. Field hiding
+does not prevent access to the field value through exports, reports, RPC or other
+server-side access. Use Odoo access rights when the value itself is confidential.
 """,
     'author': 'Flous Flow',
     'website': 'https://flousflow.com/',
@@ -33,7 +39,15 @@ Features:
         'views/field_hide_rule_views.xml',
         'views/stock_warehouse_views.xml',
         'views/account_journal_views.xml',
+        'wizard/visibility_picker_views.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'flous_menu_visibility/static/src/visibility_picker/visibility_picker.js',
+            'flous_menu_visibility/static/src/visibility_picker/visibility_picker.xml',
+            'flous_menu_visibility/static/src/visibility_picker/visibility_picker.scss',
+        ],
+    },
     'license': 'LGPL-3',
     'installable': True,
     'auto_install': False,

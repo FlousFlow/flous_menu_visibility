@@ -2,9 +2,10 @@
     <div class="oe_row oe_spaced">
         <h2 class="oe_slogan" style="text-align:center;">Menu, Field, Warehouse &amp; Journal Visibility Control</h2>
         <p class="oe_mt32" style="text-align:center;">
-            Control what each user can see across the whole system: hide menu items,
-            hide any field of any model, restrict warehouse operations per user, and
-            hide accounting journals per user. System administrators always see everything.
+            Give administrators one place to manage per-user visibility in Odoo.
+            Pick menus, form fields and list columns directly from the interface,
+            then choose who should not see them. Configure warehouse operations
+            and accounting journal access from dedicated control lists.
         </p>
         <div class="oe_span12">
             <img class="oe_picture oe_screenshot" src="images/cover_screenshot.png" style="max-width:100%;"/>
@@ -14,30 +15,42 @@
 
 <section class="oe_container oe_dark">
     <div class="oe_row oe_spaced">
-        <h3 class="oe_slogan" style="text-align:center;">1. Hide menus per user</h3>
+        <h3 class="oe_slogan" style="text-align:center;">Choose items visually</h3>
+        <div class="oe_span6">
+            <p class="oe_mt32">
+                System administrators can turn on <strong>Visibility</strong> from
+                the top bar. Move over a field or list column and click to open its
+                user selector. Search internal users, select all internal users,
+                or clear the selection. The selected-user count updates as you work.
+            </p>
+            <p>
+                For nested menus, click a parent once to open its submenu. Double-click
+                or Alt-click a parent to select that menu itself. Apply an empty
+                selection to clear an existing restriction.
+            </p>
+        </div>
+        <div class="oe_span6">
+            <img class="oe_picture oe_screenshot" src="images/screenshot_3.png"/>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h3 class="oe_slogan" style="text-align:center;">Manage rules centrally</h3>
         <div class="oe_span6">
             <img class="oe_picture oe_screenshot" src="images/screenshot_1.png"/>
         </div>
         <div class="oe_span6">
             <p class="oe_mt32">
-                Configure from the user form ("Hidden Menus" page) or from the menu
-                itself. Both sides stay in sync natively.
+                Open <strong>Settings &gt; Visibility Control</strong> to review
+                menu and field rules. Field rules show the model, field, selected
+                users and user count. Open a rule to edit it; archive or delete it
+                with standard Odoo controls.
             </p>
-        </div>
-    </div>
-</section>
-
-<section class="oe_container">
-    <div class="oe_row oe_spaced">
-        <h3 class="oe_slogan" style="text-align:center;">2. Restrict warehouse operations per user</h3>
-        <div class="oe_span6">
-            <img class="oe_picture oe_screenshot" src="images/screenshot_2.png"/>
-        </div>
-        <div class="oe_span6">
-            <p class="oe_mt32">
-                Users in the "Warehouse Visibility" group only see operations (receipts,
-                deliveries, internal transfers) of the warehouses listed on their user
-                record. An empty list means no operations are visible.
+            <p>
+                Menu restrictions stay synchronized between the menu and user
+                records. System administrators always retain visibility.
             </p>
         </div>
     </div>
@@ -45,32 +58,34 @@
 
 <section class="oe_container oe_dark">
     <div class="oe_row oe_spaced">
-        <h3 class="oe_slogan" style="text-align:center;">3. Hide any field of any model</h3>
-        <div class="oe_span6">
-            <img class="oe_picture oe_screenshot" src="images/screenshot_3.png"/>
-        </div>
+        <h3 class="oe_slogan" style="text-align:center;">Restrict warehouse operations</h3>
         <div class="oe_span6">
             <p class="oe_mt32">
-                Create rules under Settings &gt; Field Visibility Rules. A rule hides one
-                field of one model for the selected users. Hiding sets invisible="1" on
-                the view node, so the value stays loaded and the view is never broken.
+                Add operators to the <strong>Warehouse Visibility</strong> group
+                and assign the warehouses they may access. Group members only see
+                receipts, deliveries, internal transfers, stock moves and move
+                lines belonging to their assigned warehouses. An empty assignment
+                means no warehouse operations are visible to that group member.
             </p>
+        </div>
+        <div class="oe_span6">
+            <img class="oe_picture oe_screenshot" src="images/screenshot_2.png"/>
         </div>
     </div>
 </section>
 
 <section class="oe_container">
     <div class="oe_row oe_spaced">
-        <h3 class="oe_slogan" style="text-align:center;">4. Hide accounting journals per user</h3>
+        <h3 class="oe_slogan" style="text-align:center;">Restrict accounting journals</h3>
         <div class="oe_span6">
             <img class="oe_picture oe_screenshot" src="images/screenshot_5.png"/>
         </div>
         <div class="oe_span6">
             <p class="oe_mt32">
-                Administrators pick the hidden journals on the user's "Hidden Journals"
-                page. A restricted user cannot read the journal, its entries (account.move)
-                or their lines (account.move.line) &mdash; through menus, reports, exports
-                or API.
+                Choose restricted users on each journal or from the central
+                <strong>Hidden Journals</strong> list. Restrictions also cover
+                journal entries and journal items on the server, including reads
+                through reports and API calls.
             </p>
         </div>
     </div>
@@ -78,7 +93,22 @@
 
 <section class="oe_container oe_dark">
     <div class="oe_row oe_spaced">
-        <h3 class="oe_slogan" style="text-align:center;">Configuration from the other side</h3>
+        <h3 class="oe_slogan" style="text-align:center;">Know what each rule protects</h3>
+        <div class="oe_span12">
+            <p class="oe_mt32" style="text-align:center;">
+                Menu and field rules control interface visibility. Hiding a field
+                does not block access to its value through exports, reports, RPC or
+                other server-side access. Use Odoo access rights and record rules
+                when a field's value is confidential. Warehouse and journal
+                restrictions are enforced on the server for the records listed above.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h3 class="oe_slogan" style="text-align:center;">Configure from either side</h3>
         <div class="oe_span6">
             <img class="oe_picture oe_screenshot" src="images/screenshot_4.png"/>
         </div>
@@ -86,10 +116,9 @@
             <img class="oe_picture oe_screenshot" src="images/screenshot_6.png"/>
         </div>
         <div class="oe_span12">
-            <p class="oe_mt32">
-                Warehouses: assign users from the warehouse form ("Visible Users" tab).
-                Journals: pick restricted users from the journal's "Restricted Users" tab.
-                Both sides stay in sync natively.
+            <p class="oe_mt32" style="text-align:center;">
+                Warehouse and journal assignments are available from their records
+                as well as the central visibility lists. Both sides stay synchronized.
             </p>
         </div>
     </div>
