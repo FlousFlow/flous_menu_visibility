@@ -34,15 +34,6 @@ class PosConfig(models.Model):
                 _('You are not allowed to open this point of sale. Contact your administrator.')
             )
 
-    @api.constrains('restricted_user_ids')
-    def _check_no_active_session_when_restricted(self):
-        for config in self:
-            if config.restricted_user_ids and config.current_session_id:
-                raise ValidationError(
-                    _('Close the active POS session before restricting this point of sale. '
-                      'This protects in-progress sales and unsynchronized orders.')
-                )
-
     @api.model_create_multi
     def create(self, vals_list):
         configs = super().create(vals_list)
@@ -50,8 +41,30 @@ class PosConfig(models.Model):
         return configs
 
     def write(self, vals):
-        result = super().write(vals)
-        if 'restricted_user_ids' in vals:
+        restriction_field_changed = 'restricted_user_ids' in vals
+        previous_restrictions = {}
+        if restriction_field_changed:
+            previous_restrictions = {
+                config.id: set(config.sudo().restricted_user_ids.ids)
+                for config in self
+            }
+            with self.env.cr.savepoint():
+                result = super().write(vals)
+                for config in self:
+                    config.invalidate_recordset(['current_session_id'])
+                    newly_restricted = (
+                        set(config.sudo().restricted_user_ids.ids)
+                        - previous_restrictions[config.id]
+                    )
+                    if newly_restricted and config.current_session_id:
+                        raise ValidationError(
+                            _('Close the active POS session before restricting this point of sale. '
+                              'This protects in-progress sales and unsynchronized orders.')
+                        )
+        else:
+            result = super().write(vals)
+
+        if restriction_field_changed:
             if not self.env.context.get('flous_skip_pos_visibility_admin_guard'):
                 self._remove_system_administrators_from_restrictions()
             self.env.transaction.invalidate_access_cache()

@@ -4,7 +4,7 @@
 
 {
     'name': 'Flous Flow POS Visibility',
-    'version': '20.0.1.0.3',
+    'version': '20.0.1.0.4',
     'category': 'Point of Sale',
     'summary': 'Hide selected points of sale from specific users.',
     'description': """

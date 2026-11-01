@@ -4,7 +4,7 @@
 
 from lxml import etree
 
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tests.common import TransactionCase
 from odoo.tools.safe_eval import safe_eval
 
@@ -26,7 +26,13 @@ class TestPosVisibility(TransactionCase):
             'login': 'flous_pos_other_user',
             'group_ids': [(6, 0, groups)],
         })
-        config_defaults = {'payment_method_ids': [(5, 0, 0)]}
+        config_defaults = {
+            'payment_method_ids': [(5, 0, 0)],
+            'journal_id': self.env['account.journal'].search([
+                ('company_id', '=', self.env.company.id),
+                ('type', '=', 'sale'),
+            ], limit=1).id,
+        }
         self.config_a = self.env['pos.config'].create({
             **config_defaults, 'name': 'Flous POS A',
         })
@@ -85,6 +91,31 @@ class TestPosVisibility(TransactionCase):
         self.config_a.with_user(admin)._check_visibility_access()
         with self.assertRaises(AccessError):
             self.config_a.with_user(self.user).open_ui()
+
+    def test_allowed_user_can_resume_active_pos_session_with_restrictions(self):
+        self.config_a.restricted_user_ids = [(4, self.user.id)]
+        session = self.env['pos.session'].create({
+            'config_id': self.config_a.id,
+            'user_id': self.other_user.id,
+        })
+
+        action = self.config_a.with_user(self.other_user).open_ui()
+
+        self.assertEqual(session.state, 'opening_control')
+        self.assertEqual(action.get('type'), 'ir.actions.act_url')
+
+    def test_new_restriction_is_blocked_during_active_session(self):
+        session = self.env['pos.session'].create({
+            'config_id': self.config_a.id,
+            'user_id': self.other_user.id,
+        })
+        self.assertEqual(session.state, 'opening_control')
+
+        with self.assertRaises(ValidationError):
+            with self.cr.savepoint():
+                self.config_a.write({'restricted_user_ids': [(4, self.user.id)]})
+
+        self.assertNotIn(self.user, self.config_a.sudo().restricted_user_ids)
 
     def test_restricted_user_cannot_open_pos(self):
         self.config_a.restricted_user_ids = [(4, self.user.id)]
