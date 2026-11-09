@@ -1,17 +1,19 @@
-# Menu, Field, Warehouse & Journal Visibility Control
+# Menu, Field, Button, Warehouse & Journal Visibility Control
 
-**Flous Flow** — Odoo module to hide specific menu items, hide specific
-fields, restrict warehouse operations per user, and hide accounting
-journals per user.
+**Flous Flow** — Odoo module to hide specific menu items, fields and view
+buttons, restrict warehouse operations per user, and hide accounting journals.
 
 ## Features
 
-- **Central Visibility Control** — configure menus, fields, journals and
+- **Central Visibility Control** — configure menus, fields, buttons, journals and
   warehouses from **Settings → Visibility Control**. Rules are not exposed
   as tabs on individual user forms.
 - **Pick from the interface** — system administrators can enable **Visibility**
   in the systray, point at a menu item, form field, or list column, and choose
   the internal users who should not see it.
+- **Hide view buttons per user** — select an Odoo form or list action button,
+  then choose which internal users should not see it. Manage saved rules from
+  **Settings → Visibility Control → Button Visibility Rules**.
 - **Hide menus per user** — select restricted users from the central menu list.
 - **Hide fields per user** — e.g. hide `list_price` (sale price) or
   `standard_price` (cost price) on the product form from specific users.
@@ -19,6 +21,9 @@ journals per user.
   Visibility" group only see operations of their assigned warehouses.
 - **Hide accounting journals per user** — a restricted user cannot read the
   journal, its entries or their lines (server-side access restrictions, not just UI).
+- **Responsive admin screens** — the visibility lists use readable cards on
+  phones and retain sortable tables on wider screens. User assignments wrap
+  cleanly, and the field picker dialog keeps its actions visible on small screens.
 - Hiding a field sets `invisible="1"` on the view node — the value stays
   loaded, so view expressions/domains keep working and **the view is never
   broken**.
@@ -43,13 +48,27 @@ journals per user.
    restriction for that menu or field.
 
 The picker creates or updates the same rules managed from **Settings →
-Visibility Control**. It supports menu entries, form fields and list columns.
-Other view elements such as action buttons and labels without an underlying
-field are not selectable in this version.
+Visibility Control**. It supports menu entries, form fields, list columns, and
+view action buttons. Button rules match the technical method/action name and
+type; when a view button has an XML `id`, it is included to distinguish it.
+Buttons that reuse the same technical name and type without an ID across views
+of the same model share a rule.
 
 Administrators can edit or delete field rules from **Settings → Visibility
 Control → Field Visibility Rules**. The list shows each model/field target,
 selected users and the user count.
+
+Button hiding changes interface visibility only. It does not block the button's
+server-side method or action from being called through RPC; use access rights
+and server-side checks when an action must be restricted for security.
+
+The optional companion addon `flous_menu_visibility_pos` is installed
+automatically when both this module and Odoo Point of Sale are installed. It adds
+**Hidden Points of Sale** under **Settings → Visibility Control** without making
+Point of Sale a dependency of this core addon. Databases that already had both
+modules installed before this automatic integration was added may need a
+one-time installation of **Flous Flow POS Visibility** from Apps. Close active
+sessions before restricting a POS configuration.
 
 ## Part 1 — Hide menus
 

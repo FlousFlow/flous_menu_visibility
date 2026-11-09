@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { Component, onWillDestroy, signal } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -24,6 +25,10 @@ export class VisibilityPickerSystray extends Component {
         return user.isSystem;
     }
 
+    get pickerTitle() {
+        return this.active() ? _t("Cancel item selection") : _t("Select an item to hide");
+    }
+
     togglePickerMode() {
         this.setPickerMode(!this.active());
     }
@@ -38,9 +43,9 @@ export class VisibilityPickerSystray extends Component {
             document.addEventListener("pointerout", this.onPointerOut, true);
             document.addEventListener("click", this.onDocumentClick, true);
             document.body.classList.add("o_flous_visibility_picker_active");
-            this.notification.add(
-                "Click a field or list column to select it. Click a parent menu once to open it; double-click or Alt-click to select the parent menu.",
-                { type: "info", sticky: true, title: "Visibility selection is active" },
+            this.pickerNotificationClose = this.notification.add(
+                _t("Click a field, list column, or view button to select it. Click a parent menu once to open it; double-click or Alt-click to select the parent menu."),
+                { type: "info", sticky: true, title: _t("Visibility selection is active") },
             );
         } else {
             document.removeEventListener("pointerover", this.onPointerOver, true);
@@ -48,10 +53,35 @@ export class VisibilityPickerSystray extends Component {
             document.removeEventListener("click", this.onDocumentClick, true);
             document.body.classList.remove("o_flous_visibility_picker_active");
             this.clearHighlight();
+            this.pickerNotificationClose?.();
+            this.pickerNotificationClose = null;
         }
     }
 
     getTarget(eventTarget) {
+        const buttonNode = eventTarget.closest?.("button[name][type]");
+        if (
+            buttonNode &&
+            ["object", "action"].includes(buttonNode.getAttribute("type")) &&
+            buttonNode.closest(".o_form_view, .o_list_view") &&
+            !buttonNode.closest(".o_flous_visibility_picker")
+        ) {
+            const modelName = this.action.currentController?.props?.resModel;
+            if (modelName) {
+                return {
+                    node: buttonNode,
+                    type: "button",
+                    modelName,
+                    buttonName: buttonNode.getAttribute("name"),
+                    buttonType: buttonNode.getAttribute("type"),
+                    buttonId: buttonNode.getAttribute("id") || false,
+                    buttonLabel:
+                        buttonNode.querySelector(".o_stat_text")?.textContent.trim() ||
+                        buttonNode.getAttribute("string") ||
+                        buttonNode.textContent.trim(),
+                };
+            }
+        }
         const fieldNode = eventTarget.closest?.(".o_field_widget[name]");
         const fieldLabel = eventTarget.closest?.("label[for], .o_field_label[for]");
         const fieldId = fieldLabel?.getAttribute("for");
@@ -132,6 +162,18 @@ export class VisibilityPickerSystray extends Component {
                 ? await this.orm.call(
                     "flous.visibility.picker", "action_open_for_menu", [target.xmlid]
                 )
+                : target.type === "button"
+                ? await this.orm.call(
+                    "flous.visibility.picker",
+                    "action_open_for_button",
+                    [
+                        target.modelName,
+                        target.buttonName,
+                        target.buttonType,
+                        target.buttonId,
+                        target.buttonLabel,
+                    ],
+                )
                 : await this.orm.call(
                     "flous.visibility.picker",
                     "action_open_for_field",
@@ -139,7 +181,7 @@ export class VisibilityPickerSystray extends Component {
                 );
             await this.action.doAction(action);
         } catch (error) {
-            this.notification.add(error.message || "Could not open visibility settings.", {
+            this.notification.add(error.message || _t("Could not open visibility settings."), {
                 type: "danger",
             });
         }

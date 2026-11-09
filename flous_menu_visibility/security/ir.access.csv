@@ -1,3 +1,4 @@
 id,name,model_id,group_id/id,operation,domain
 access_field_hide_rule_system,field.hide.rule.system,flous.field.hide.rule,base.group_system,crud,
+access_button_hide_rule_system,button.hide.rule.system,flous.button.hide.rule,base.group_system,crud,
 access_visibility_picker_system,visibility.picker.system,flous.visibility.picker,base.group_system,crud,

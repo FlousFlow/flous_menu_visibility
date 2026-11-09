@@ -6,7 +6,7 @@ from odoo import models
 
 
 class IrUiView(models.Model):
-    """Hide fields for specific users at view-render time.
+    """Hide configured fields and buttons at view-render time.
 
     Odoo 20 calls ``_postprocess_access_rights`` once per requested view,
     on the *combined* arch, *after* the (group-based) cache is read. This
@@ -25,32 +25,40 @@ class IrUiView(models.Model):
         if not model_name or self.env.user.has_group('base.group_system'):
             # System administrators always see every field.
             return tree
-        if 'flous.field.hide.rule' not in self.env:
-            # Safety net: rules model not (yet) registered.
-            return tree
-
-        rules = self.env['flous.field.hide.rule'].sudo().search([
-            ('active', '=', True),
-            ('user_ids', 'in', self.env.user.id),
-        ])
-        if not rules:
-            return tree
-
-        # Ignore incomplete/stale rules defensively.  Rules are editable data
-        # and must never be able to make a view parser crash.
-        hidden_fields = {
-            rule.field_id.name
-            for rule in rules
-            if rule.field_id and rule.model_id
-            and rule.model_id.model == model_name
-        }
-        if not hidden_fields:
-            return tree
+        hidden_fields = set()
+        if 'flous.field.hide.rule' in self.env:
+            rules = self.env['flous.field.hide.rule'].sudo().search([
+                ('active', '=', True),
+                ('user_ids', 'in', self.env.user.id),
+            ])
+            # Ignore incomplete/stale rules defensively.
+            hidden_fields = {
+                rule.field_id.name
+                for rule in rules
+                if rule.field_id and rule.model_id
+                and rule.model_id.model == model_name
+            }
 
         # Set invisible="1" instead of removing the node: the field's value
         # stays loaded, so expressions/domains referencing it keep working
         # and the view layout is not broken.
-        for node in tree.xpath(".//field[@name]"):
-            if node.get('name') in hidden_fields:
-                node.set('invisible', '1')
+        if hidden_fields:
+            for node in tree.xpath(".//field[@name]"):
+                if node.get('name') in hidden_fields:
+                    node.set('invisible', '1')
+
+        if 'flous.button.hide.rule' in self.env:
+            button_rules = self.env['flous.button.hide.rule'].sudo().search([
+                ('active', '=', True),
+                ('user_ids', 'in', self.env.user.id),
+                ('model_name', '=', model_name),
+            ])
+            rules_by_selector = {
+                (rule.button_type, rule.button_name, rule.button_id or '')
+                for rule in button_rules
+            }
+            for node in tree.xpath(".//button[@name][@type='object' or @type='action']"):
+                selector = (node.get('type'), node.get('name'), node.get('id') or '')
+                if selector in rules_by_selector:
+                    node.set('invisible', '1')
         return tree
