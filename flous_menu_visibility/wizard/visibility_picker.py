@@ -11,11 +11,19 @@ class FlousVisibilityPicker(models.TransientModel):
     _description = 'Visibility Rule User Selection'
 
     target_type = fields.Selection(
-        [('field', 'Field'), ('menu', 'Menu'), ('button', 'Button')], required=True, readonly=True,
+        [
+            ('field', 'Field'),
+            ('menu', 'Menu'),
+            ('button', 'Button'),
+            ('journal', 'Journal'),
+        ],
+        required=True,
+        readonly=True,
     )
     model_id = fields.Many2one('ir.model', readonly=True)
     field_id = fields.Many2one('ir.model.fields', readonly=True)
     menu_id = fields.Many2one('ir.ui.menu', readonly=True)
+    journal_id = fields.Many2one('account.journal', readonly=True)
     button_name = fields.Char(readonly=True)
     button_type = fields.Selection(
         [
@@ -82,6 +90,7 @@ class FlousVisibilityPicker(models.TransientModel):
     @api.depends(
         'target_type', 'model_id', 'field_id.field_description',
         'menu_id.complete_name',
+        'journal_id.display_name',
         'button_label', 'button_name',
     )
     def _compute_target_label(self):
@@ -92,6 +101,8 @@ class FlousVisibilityPicker(models.TransientModel):
                 )
             elif wizard.target_type == 'menu' and wizard.menu_id:
                 wizard.target_label = wizard.menu_id.complete_name
+            elif wizard.target_type == 'journal' and wizard.journal_id:
+                wizard.target_label = wizard.journal_id.display_name
             elif wizard.target_type == 'button' and wizard.model_id:
                 wizard.target_label = '%s · %s' % (
                     wizard.model_id.name, wizard.button_label or wizard.button_name,
@@ -137,6 +148,23 @@ class FlousVisibilityPicker(models.TransientModel):
             'target_type': 'menu',
             'menu_id': menu.id,
             'user_ids': [(6, 0, menu.restricted_user_ids.ids)],
+        })
+        return wizard._get_dialog_action()
+
+    @api.model
+    def action_open_for_journal(self, journal_id):
+        self._check_visibility_admin()
+        try:
+            journal_id = int(journal_id)
+        except (TypeError, ValueError):
+            journal_id = 0
+        journal = self.env['account.journal'].sudo().browse(journal_id).exists()
+        if not journal:
+            raise UserError(_('The selected journal could not be identified.'))
+        wizard = self.sudo().create({
+            'target_type': 'journal',
+            'journal_id': journal.id,
+            'user_ids': [(6, 0, journal.restricted_user_ids.ids)],
         })
         return wizard._get_dialog_action()
 
@@ -204,6 +232,10 @@ class FlousVisibilityPicker(models.TransientModel):
 
         if self.target_type == 'menu':
             self.menu_id.sudo().write({
+                'restricted_user_ids': [(6, 0, selected_users.ids)],
+            })
+        elif self.target_type == 'journal':
+            self.journal_id.sudo().write({
                 'restricted_user_ids': [(6, 0, selected_users.ids)],
             })
         elif self.target_type == 'field':

@@ -4,7 +4,7 @@
 
 {
     'name': 'Menu, Field, Button, Warehouse & Journal Visibility Control',
-    'version': '20.0.1.3.3',
+    'version': '20.0.1.3.5',
     'category': 'Technical',
     'summary': 'Hide menus, fields and view buttons per user with a visual picker and access controls.',
     'description': """
@@ -12,7 +12,7 @@ Hide menus, fields, view buttons, warehouse operations and accounting journals p
 
 Features:
 - Configure all visibility controls globally from Settings > Visibility Control.
-- Select a visible menu, field or view button from the interface, then choose affected users.
+- Select a visible menu, field, view button or accounting journal from the interface, then choose affected users.
 - Search users, select all internal users, or clear the selection in one click.
 - Hide menu items per user from the central Hidden Menus list.
 - Hide any field of any model per user from the central Field Visibility Rules list.

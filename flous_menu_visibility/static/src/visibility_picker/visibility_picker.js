@@ -44,7 +44,7 @@ export class VisibilityPickerSystray extends Component {
             document.addEventListener("click", this.onDocumentClick, true);
             document.body.classList.add("o_flous_visibility_picker_active");
             this.pickerNotificationClose = this.notification.add(
-                _t("Click a field, list column, or view button to select it. Click a parent menu once to open it; double-click or Alt-click to select the parent menu."),
+                _t("Click a field, list column, view button, or accounting journal row to select it. Click a parent menu once to open it; double-click or Alt-click to select the parent menu."),
                 { type: "info", sticky: true, title: _t("Visibility selection is active") },
             );
         } else {
@@ -102,6 +102,23 @@ export class VisibilityPickerSystray extends Component {
                         buttonNode.querySelector(".o_stat_text")?.textContent.trim() ||
                         buttonNode.getAttribute("string") ||
                         buttonNode.textContent.trim(),
+                };
+            }
+        }
+        const controller = this.action.currentController;
+        const modelName = controller?.props?.resModel;
+        if (modelName === "account.journal") {
+            const journalRow = eventTarget.closest?.("tr.o_data_row[data-res-id]");
+            const journalId = Number(journalRow?.getAttribute("data-res-id"));
+            if (journalRow && Number.isInteger(journalId) && journalId > 0) {
+                const nameCell = journalRow.querySelector(
+                    'td[name="name"], td[data-name="name"]'
+                );
+                return {
+                    node: journalRow,
+                    type: "journal",
+                    journalId,
+                    journalLabel: nameCell?.textContent.trim() || journalRow.textContent.trim(),
                 };
             }
         }
@@ -184,6 +201,12 @@ export class VisibilityPickerSystray extends Component {
             const action = target.type === "menu"
                 ? await this.orm.call(
                     "flous.visibility.picker", "action_open_for_menu", [target.xmlid]
+                )
+                : target.type === "journal"
+                ? await this.orm.call(
+                    "flous.visibility.picker",
+                    "action_open_for_journal",
+                    [target.journalId],
                 )
                 : target.type === "button"
                 ? await this.orm.call(

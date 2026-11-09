@@ -285,6 +285,8 @@ msgstr "العنصر المراد إخفاؤه"
 
 #. module: flous_menu_visibility
 #: model:ir.model,name:flous_menu_visibility.model_account_journal
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_visibility_picker__journal_id
+#: model:ir.model.fields.selection,name:flous_menu_visibility.selection__flous_visibility_picker__target_type__journal
 msgid "Journal"
 msgstr "دفتر يومية"
 
@@ -679,8 +681,8 @@ msgstr "مخفي عن المستخدمين"
 #. module: flous_menu_visibility
 #. odoo-javascript
 #: code:addons/flous_menu_visibility/static/src/visibility_picker/visibility_picker.js:0
-msgid "Click a field, list column, or view button to select it. Click a parent menu once to open it; double-click or Alt-click to select the parent menu."
-msgstr "اضغط على حقل أو عمود قائمة أو زر في العرض لتحديده. اضغط مرة على القائمة الرئيسية لفتحها، أو اضغط مرتين أو مع Alt لتحديدها."
+msgid "Click a field, list column, view button, or accounting journal row to select it. Click a parent menu once to open it; double-click or Alt-click to select the parent menu."
+msgstr "اضغط على حقل أو عمود قائمة أو زر في العرض أو صف دفتر يومية لتحديده. اضغط مرة على القائمة الرئيسية لفتحها، أو اضغط مرتين أو مع Alt لتحديدها."
 
 #. module: flous_menu_visibility
 #: code:addons/flous_menu_visibility/wizard/visibility_picker.py:0
@@ -696,3 +698,8 @@ msgstr "تعذر تحديد الزر المختار."
 #: code:addons/flous_menu_visibility/wizard/visibility_picker.py:0
 msgid "The selected list control could not be identified."
 msgstr "تعذر تحديد أداة القائمة المختارة."
+
+#. module: flous_menu_visibility
+#: code:addons/flous_menu_visibility/wizard/visibility_picker.py:0
+msgid "The selected journal could not be identified."
+msgstr "تعذر تحديد دفتر اليومية المختار."
