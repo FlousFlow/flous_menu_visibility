@@ -105,6 +105,42 @@ class TestButtonHideRule(TransactionCase):
         ])
         self.assertEqual(rule.user_ids, self.user)
 
+    def test_x2many_create_control_hides_without_hiding_the_field(self):
+        move_form = self.env.ref('account.view_move_form')
+        account_user = self.env['res.users'].create({
+            'name': 'Flous Invoice Button User',
+            'login': 'flous_invoice_button_user',
+            'group_ids': [(6, 0, [
+                self.env.ref('base.group_user').id,
+                self.env.ref('account.group_account_user').id,
+            ])],
+        })
+        action = self.env['flous.visibility.picker'].action_open_for_button(
+            'account.move',
+            'create:invoice_line_ids:l',
+            'create',
+            False,
+            'Add a line',
+            'invoice_line_ids',
+            'l',
+        )
+        wizard = self.env['flous.visibility.picker'].browse(action['res_id'])
+        wizard.user_ids = [(6, 0, [account_user.id])]
+        wizard.action_apply()
+
+        views = self.env['account.move'].with_user(account_user).get_views(
+            [(move_form.id, 'form')]
+        )
+        arch = etree.fromstring(views['views']['form']['arch'].encode())
+        create_controls = arch.xpath(
+            ".//field[@name='invoice_line_ids']//create[@data-hotkey='l']"
+        )
+        self.assertTrue(create_controls)
+        self.assertTrue(all(node.get('invisible') == 'True' for node in create_controls))
+        invoice_lines = arch.xpath(".//field[@name='invoice_line_ids']")
+        self.assertTrue(invoice_lines)
+        self.assertTrue(all(node.get('invisible') != '1' for node in invoice_lines))
+
     def test_non_admin_cannot_open_button_rule_picker(self):
         with self.assertRaises(AccessError):
             self.env['flous.visibility.picker'].with_user(self.user).action_open_for_button(

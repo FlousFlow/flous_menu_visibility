@@ -22,8 +22,20 @@ class FlousButtonHideRule(models.Model):
     )
     button_name = fields.Char(string='Technical Name', required=True)
     button_type = fields.Selection(
-        [('object', 'Object Method'), ('action', 'Window Action')],
+        [
+            ('object', 'Object Method'),
+            ('action', 'Window Action'),
+            ('create', 'Add Line Control'),
+        ],
         required=True,
+    )
+    button_field_name = fields.Char(
+        string='Parent Field',
+        help='Technical field name for an embedded list create control.',
+    )
+    button_hotkey = fields.Char(
+        string='Control Shortcut',
+        help='Technical shortcut used to identify the embedded create control.',
     )
     button_id = fields.Char(
         string='View Button ID',
