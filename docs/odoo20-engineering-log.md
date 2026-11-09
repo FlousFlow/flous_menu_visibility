@@ -28,3 +28,13 @@
 - Validation: added a regression test exercising the wizard and checking the
   account invoice-line control in the generated view. Interactive verification
   is in progress.
+
+## 2026-11-09 — Contextual accounting journal restrictions
+
+- Added journal-row selection to the Visibility picker so administrators can
+  choose a journal from Accounting → Configuration → Journals and assign users
+  directly in the existing picker.
+- Applied assignments through `account.journal.restricted_user_ids`, preserving
+  the existing server-side restrictions on journals, moves, and journal items.
+- Added regression coverage for applying/reopening the selection and blocking
+  non-administrators. UI and module-upgrade validation pending.

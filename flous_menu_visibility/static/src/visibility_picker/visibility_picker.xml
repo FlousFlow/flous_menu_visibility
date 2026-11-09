@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
+    <t t-inherit="web.ListRenderer.RecordRow" t-inherit-mode="extension">
+        <xpath expr="//tr[@class='o_data_row']" position="attributes">
+            <attribute name="t-att-data-res-id">record.resId</attribute>
+        </xpath>
+    </t>
     <t t-name="flous_menu_visibility.VisibilityPickerSystray" owl="1">
         <button t-if="this.isSystem" type="button"
                 class="o_flous_visibility_picker o_nav_entry px-2"

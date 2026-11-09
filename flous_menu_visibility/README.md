@@ -9,8 +9,8 @@ buttons, restrict warehouse operations per user, and hide accounting journals.
   warehouses from **Settings → Visibility Control**. Rules are not exposed
   as tabs on individual user forms.
 - **Pick from the interface** — system administrators can enable **Visibility**
-  in the systray, point at a menu item, form field, or list column, and choose
-  the internal users who should not see it.
+  in the systray, point at a menu item, form field, list column, or an accounting
+  journal row, and choose the internal users who should not see it.
 - **Hide view buttons per user** — select an Odoo form or list action button,
   then choose which internal users should not see it. Manage saved rules from
   **Settings → Visibility Control → Button Visibility Rules**.
@@ -23,6 +23,7 @@ buttons, restrict warehouse operations per user, and hide accounting journals.
   Visibility" group only see operations of their assigned warehouses.
 - **Hide accounting journals per user** — a restricted user cannot read the
   journal, its entries or their lines (server-side access restrictions, not just UI).
+  Select a journal directly from the Journals list with the Visibility picker.
 - **Responsive admin screens** — the visibility lists use readable cards on
   phones and retain sortable tables on wider screens. User assignments wrap
   cleanly, and the field picker dialog keeps its actions visible on small screens.
