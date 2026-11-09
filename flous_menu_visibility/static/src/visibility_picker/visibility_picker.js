@@ -59,6 +59,29 @@ export class VisibilityPickerSystray extends Component {
     }
 
     getTarget(eventTarget) {
+        const createButton = eventTarget.closest?.(
+            ".o_field_x2many_list_row_add button"
+        );
+        if (createButton && !createButton.closest(".o_flous_visibility_picker")) {
+            const parentField = createButton.closest(".o_field_widget[name]");
+            const modelName = this.action.currentController?.props?.resModel;
+            const fieldName = parentField?.getAttribute("name");
+            const buttonHotkey = createButton.getAttribute("data-hotkey") || false;
+            const buttonLabel = createButton.textContent.trim();
+            if (modelName && fieldName && buttonLabel) {
+                return {
+                    node: createButton,
+                    type: "button",
+                    modelName,
+                    buttonName: `create:${fieldName}:${buttonHotkey || buttonLabel}`,
+                    buttonType: "create",
+                    buttonId: false,
+                    buttonFieldName: fieldName,
+                    buttonHotkey,
+                    buttonLabel,
+                };
+            }
+        }
         const buttonNode = eventTarget.closest?.("button[name][type]");
         if (
             buttonNode &&
@@ -172,6 +195,8 @@ export class VisibilityPickerSystray extends Component {
                         target.buttonType,
                         target.buttonId,
                         target.buttonLabel,
+                        target.buttonFieldName,
+                        target.buttonHotkey,
                     ],
                 )
                 : await this.orm.call(

@@ -14,6 +14,8 @@ buttons, restrict warehouse operations per user, and hide accounting journals.
 - **Hide view buttons per user** — select an Odoo form or list action button,
   then choose which internal users should not see it. Manage saved rules from
   **Settings → Visibility Control → Button Visibility Rules**.
+- **Hide embedded list controls** — select controls such as **Add a line** in
+  one-to-many lists without hiding the whole field.
 - **Hide menus per user** — select restricted users from the central menu list.
 - **Hide fields per user** — e.g. hide `list_price` (sale price) or
   `standard_price` (cost price) on the product form from specific users.

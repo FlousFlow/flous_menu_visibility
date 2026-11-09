@@ -4,7 +4,7 @@
 
 {
     'name': 'Menu, Field, Button, Warehouse & Journal Visibility Control',
-    'version': '20.0.1.3.2',
+    'version': '20.0.1.3.3',
     'category': 'Technical',
     'summary': 'Hide menus, fields and view buttons per user with a visual picker and access controls.',
     'description': """
@@ -16,7 +16,7 @@ Features:
 - Search users, select all internal users, or clear the selection in one click.
 - Hide menu items per user from the central Hidden Menus list.
 - Hide any field of any model per user from the central Field Visibility Rules list.
-- Hide form and list view action buttons per user from the central Button Visibility Rules list.
+- Hide form/list action buttons and embedded list create controls per user from Button Visibility Rules.
 - Restrict warehouse operations per user (Warehouse Visibility group): users in the
   group only see operations of the warehouses listed in Visibility Control.
 - Hide accounting journals per user with Odoo 20 access restrictions: a restricted user cannot

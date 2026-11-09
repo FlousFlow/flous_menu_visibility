@@ -32,6 +32,8 @@
                             <field name="button_type"/>
                             <field name="button_name"/>
                             <field name="button_id"/>
+                            <field name="button_field_name"/>
+                            <field name="button_hotkey"/>
                             <field name="selector_key" readonly="1"/>
                         </group>
                     </group>

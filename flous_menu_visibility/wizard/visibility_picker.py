@@ -18,9 +18,16 @@ class FlousVisibilityPicker(models.TransientModel):
     menu_id = fields.Many2one('ir.ui.menu', readonly=True)
     button_name = fields.Char(readonly=True)
     button_type = fields.Selection(
-        [('object', 'Object Method'), ('action', 'Window Action')], readonly=True,
+        [
+            ('object', 'Object Method'),
+            ('action', 'Window Action'),
+            ('create', 'Add Line Control'),
+        ],
+        readonly=True,
     )
     button_id = fields.Char(readonly=True)
+    button_field_name = fields.Char(readonly=True)
+    button_hotkey = fields.Char(readonly=True)
     button_selector_key = fields.Char(readonly=True)
     button_label = fields.Char(readonly=True)
     target_label = fields.Char(compute='_compute_target_label')
@@ -136,15 +143,28 @@ class FlousVisibilityPicker(models.TransientModel):
     @api.model
     def action_open_for_button(
         self, model_name, button_name, button_type, button_id=False, button_label=False,
+        button_field_name=False, button_hotkey=False,
     ):
         self._check_visibility_admin()
-        if button_type not in ('object', 'action') or not button_name:
+        if button_type not in ('object', 'action', 'create'):
             raise UserError(_('Only form and list view action buttons can be hidden.'))
+        if button_type == 'create':
+            if not button_field_name:
+                raise UserError(_('The selected list control could not be identified.'))
+            button_name = button_name or 'create:%s:%s' % (
+                button_field_name, button_hotkey or button_label or '',
+            )
+        elif not button_name:
+            raise UserError(_('The selected button could not be identified.'))
         model = self.env['ir.model'].sudo().search([('model', '=', model_name)], limit=1)
         if not model:
             raise UserError(_('The selected button could not be identified.'))
         # Labels are translated and therefore deliberately excluded from the key.
-        selector_key = '%s|%s|%s' % (button_type, button_name, button_id or '')
+        selector_key = (
+            'create|%s|%s' % (button_field_name, button_hotkey or button_label or '')
+            if button_type == 'create'
+            else '%s|%s|%s' % (button_type, button_name, button_id or '')
+        )
         rule = self.env['flous.button.hide.rule'].sudo().search([
             ('model_id', '=', model.id), ('selector_key', '=', selector_key),
         ], limit=1)
@@ -154,6 +174,8 @@ class FlousVisibilityPicker(models.TransientModel):
             'button_name': button_name,
             'button_type': button_type,
             'button_id': button_id or False,
+            'button_field_name': button_field_name or False,
+            'button_hotkey': button_hotkey or False,
             'button_label': button_label or button_name,
             'button_selector_key': selector_key,
             'user_ids': [(6, 0, rule.user_ids.ids if rule and rule.active else [])],
@@ -210,6 +232,8 @@ class FlousVisibilityPicker(models.TransientModel):
                 'button_name': self.button_name,
                 'button_type': self.button_type,
                 'button_id': self.button_id or False,
+                'button_field_name': self.button_field_name or False,
+                'button_hotkey': self.button_hotkey or False,
                 'button_label': self.button_label or self.button_name,
                 'selector_key': self.button_selector_key,
                 'user_ids': [(6, 0, selected_users.ids)],

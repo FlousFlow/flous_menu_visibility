@@ -25,7 +25,7 @@ msgid ""
 "- Search users, select all internal users, or clear the selection in one click.\n"
 "- Hide menu items per user from the central Hidden Menus list.\n"
 "- Hide any field of any model per user from the central Field Visibility Rules list.\n"
-"- Hide form and list view action buttons per user from the central Button Visibility Rules list.\n"
+"- Hide form/list action buttons and embedded list create controls per user from Button Visibility Rules.\n"
 "- Restrict warehouse operations per user (Warehouse Visibility group): users in the\n"
 "  group only see operations of the warehouses listed in Visibility Control.\n"
 "- Hide accounting journals per user with Odoo 20 access restrictions: a restricted user cannot\n"
@@ -44,7 +44,7 @@ msgstr ""
 "- البحث عن المستخدمين أو تحديد جميع المستخدمين الداخليين أو مسح التحديد بنقرة واحدة.\n"
 "- إخفاء عناصر القوائم لكل مستخدم من قائمة القوائم المخفية المركزية.\n"
 "- إخفاء أي حقل في أي نموذج لكل مستخدم من قائمة قواعد إخفاء الحقول.\n"
-"- إخفاء أزرار الإجراءات في عروض النماذج والقوائم من قائمة قواعد إخفاء الأزرار.\n"
+"- إخفاء أزرار الإجراءات وأدوات إضافة السجلات في عروض النماذج والقوائم من قواعد إخفاء الأزرار.\n"
 "- تقييد عمليات المخازن لكل مستخدم (لمجموعة إظهار المخازن)، بحيث يرى أعضاء المجموعة عمليات المخازن المحددة فقط.\n"
 "- إخفاء دفاتر اليومية وفق قيود الوصول في أودو 20؛ فلا يستطيع المستخدم المقيّد قراءة دفتر اليومية أو قيوده (account.move) أو بنودها (account.move.line).\n"
 "- يرى مديرو النظام جميع العناصر دائمًا.\n"
@@ -612,6 +612,16 @@ msgid "Button Visibility Rule"
 msgstr "قاعدة إخفاء زر"
 
 #. module: flous_menu_visibility
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_button_hide_rule__button_field_name
+msgid "Parent Field"
+msgstr "الحقل الأب"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_button_hide_rule__button_hotkey
+msgid "Control Shortcut"
+msgstr "اختصار الأداة"
+
+#. module: flous_menu_visibility
 #: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_button_hide_rule__button_label
 msgid "Button Label"
 msgstr "عنوان الزر"
@@ -652,6 +662,11 @@ msgid "Window Action"
 msgstr "إجراء نافذة"
 
 #. module: flous_menu_visibility
+#: model:ir.model.fields.selection,name:flous_menu_visibility.selection__flous_button_hide_rule__button_type__create
+msgid "Add Line Control"
+msgstr "أداة إضافة سطر"
+
+#. module: flous_menu_visibility
 #: model:ir.model.fields.selection,name:flous_menu_visibility.selection__flous_visibility_picker__target_type__button
 msgid "Button"
 msgstr "زر"
@@ -676,3 +691,8 @@ msgstr "يمكن إخفاء أزرار الإجراءات في عروض النم
 #: code:addons/flous_menu_visibility/wizard/visibility_picker.py:0
 msgid "The selected button could not be identified."
 msgstr "تعذر تحديد الزر المختار."
+
+#. module: flous_menu_visibility
+#: code:addons/flous_menu_visibility/wizard/visibility_picker.py:0
+msgid "The selected list control could not be identified."
+msgstr "تعذر تحديد أداة القائمة المختارة."

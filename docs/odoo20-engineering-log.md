@@ -18,3 +18,13 @@
   the picker on a real product stat button and displayed its clean label;
   cancelled without saving a rule. Python compilation and `git diff --check`
   passed.
+
+## 2026-11-09 — Embedded list create controls
+
+- Fixed selection of x2many list controls such as **Add a line**: the picker
+  identifies the control by its parent field and Odoo shortcut, then marks only
+  that control invisible for selected users.
+- This keeps the one-to-many field and existing lines visible and editable.
+- Validation: added a regression test exercising the wizard and checking the
+  account invoice-line control in the generated view. Interactive verification
+  is in progress.

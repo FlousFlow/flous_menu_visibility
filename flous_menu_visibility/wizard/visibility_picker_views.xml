@@ -13,6 +13,8 @@
                     <field name="button_name" invisible="1"/>
                     <field name="button_type" invisible="1"/>
                     <field name="button_id" invisible="1"/>
+                    <field name="button_field_name" invisible="1"/>
+                    <field name="button_hotkey" invisible="1"/>
                     <field name="button_selector_key" invisible="1"/>
                     <field name="button_label" invisible="1"/>
                     <field name="eligible_user_ids" invisible="1"/>
