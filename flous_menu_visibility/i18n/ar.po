@@ -17,37 +17,39 @@ msgstr ""
 #: model:ir.module.module,description:base.module_flous_menu_visibility
 msgid ""
 "\n"
-"Hide menus, fields, warehouse operations and accounting journals per user.\n"
+"Hide menus, fields, view buttons, warehouse operations and accounting journals per user.\n"
 "\n"
 "Features:\n"
 "- Configure all visibility controls globally from Settings > Visibility Control.\n"
-"- Select a visible menu or field from the interface, then choose affected users.\n"
+"- Select a visible menu, field or view button from the interface, then choose affected users.\n"
 "- Search users, select all internal users, or clear the selection in one click.\n"
 "- Hide menu items per user from the central Hidden Menus list.\n"
 "- Hide any field of any model per user from the central Field Visibility Rules list.\n"
+"- Hide form and list view action buttons per user from the central Button Visibility Rules list.\n"
 "- Restrict warehouse operations per user (Warehouse Visibility group): users in the\n"
 "  group only see operations of the warehouses listed in Visibility Control.\n"
 "- Hide accounting journals per user with Odoo 20 access restrictions: a restricted user cannot\n"
 "  read the journal, its entries (account.move) or their lines (account.move.line).\n"
 "- System administrators always see everything.\n"
 "\n"
-"Menu and field visibility rules control what appears in the interface. Field hiding\n"
+"Menu, field and button visibility rules control what appears in the interface. Field hiding\n"
 "does not prevent access to the field value through exports, reports, RPC or other\n"
 "server-side access. Use Odoo access rights when the value itself is confidential.\n"
 msgstr ""
-"إخفاء القوائم والحقول وعمليات المخازن ودفاتر اليومية لكل مستخدم.\n"
+"إخفاء القوائم والحقول والأزرار وعمليات المخازن ودفاتر اليومية لكل مستخدم.\n"
 "\n"
 "المزايا:\n"
 "- إدارة جميع إعدادات الإظهار من الإعدادات > التحكم في الإظهار.\n"
-"- تحديد قائمة أو حقل ظاهر من الواجهة ثم اختيار المستخدمين المعنيين.\n"
+"- تحديد قائمة أو حقل أو زر ظاهر من الواجهة ثم اختيار المستخدمين المعنيين.\n"
 "- البحث عن المستخدمين أو تحديد جميع المستخدمين الداخليين أو مسح التحديد بنقرة واحدة.\n"
 "- إخفاء عناصر القوائم لكل مستخدم من قائمة القوائم المخفية المركزية.\n"
 "- إخفاء أي حقل في أي نموذج لكل مستخدم من قائمة قواعد إخفاء الحقول.\n"
+"- إخفاء أزرار الإجراءات في عروض النماذج والقوائم من قائمة قواعد إخفاء الأزرار.\n"
 "- تقييد عمليات المخازن لكل مستخدم (لمجموعة إظهار المخازن)، بحيث يرى أعضاء المجموعة عمليات المخازن المحددة فقط.\n"
 "- إخفاء دفاتر اليومية وفق قيود الوصول في أودو 20؛ فلا يستطيع المستخدم المقيّد قراءة دفتر اليومية أو قيوده (account.move) أو بنودها (account.move.line).\n"
 "- يرى مديرو النظام جميع العناصر دائمًا.\n"
 "\n"
-"تتحكم قواعد إظهار القوائم والحقول فيما يظهر في الواجهة. إخفاء الحقل لا يمنع الوصول إلى قيمته عبر التصدير أو التقارير أو RPC أو غيرها من وسائل الوصول إلى الخادم. استخدم صلاحيات الوصول في أودو عندما تكون القيمة نفسها سرية."
+"تتحكم قواعد إظهار القوائم والحقول والأزرار فيما يظهر في الواجهة. إخفاء الحقل لا يمنع الوصول إلى قيمته عبر التصدير أو التقارير أو RPC أو غيرها من وسائل الوصول إلى الخادم. استخدم صلاحيات الوصول في أودو عندما تكون القيمة نفسها سرية."
 
 #. module: flous_menu_visibility
 #: model_terms:ir.ui.view,arch_db:flous_menu_visibility.view_visibility_menu_kanban
@@ -316,8 +318,8 @@ msgstr "القائمة"
 
 #. module: flous_menu_visibility
 #: model:ir.module.module,shortdesc:base.module_flous_menu_visibility
-msgid "Menu, Field, Warehouse & Journal Visibility Control"
-msgstr "التحكم في إظهار القوائم والحقول والمخازن ودفاتر اليومية"
+msgid "Menu, Field, Button, Warehouse & Journal Visibility Control"
+msgstr "التحكم في إظهار القوائم والحقول والأزرار والمخازن ودفاتر اليومية"
 
 #. module: flous_menu_visibility
 #: model:ir.model.fields,help:flous_menu_visibility.field_res_users__hidden_menu_ids
@@ -597,3 +599,80 @@ msgstr "هل هذا المستخدم ينتمي لمجموعة المستخدم�
 #: model:ir.model.fields,help:flous_menu_visibility.field_res_users__is_admin
 msgid "Whether this user is the main administrator."
 msgstr "هل هذا المستخدم هو مدير النظام الرئيسي."
+
+#. module: flous_menu_visibility
+#: model:ir.actions.act_window,name:flous_menu_visibility.action_button_hide_rule
+#: model:ir.ui.menu,name:flous_menu_visibility.menu_button_hide_rule
+msgid "Button Visibility Rules"
+msgstr "قواعد إخفاء الأزرار"
+
+#. module: flous_menu_visibility
+#: model:ir.model,name:flous_menu_visibility.model_flous_button_hide_rule
+msgid "Button Visibility Rule"
+msgstr "قاعدة إخفاء زر"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_button_hide_rule__button_label
+msgid "Button Label"
+msgstr "عنوان الزر"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_button_hide_rule__button_name
+msgid "Technical Name"
+msgstr "الاسم التقني"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_button_hide_rule__model_name
+msgid "Technical Model Name"
+msgstr "الاسم التقني للنموذج"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_button_hide_rule__button_type
+msgid "Button Type"
+msgstr "نوع الزر"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_button_hide_rule__selector_key
+msgid "Selector Key"
+msgstr "مفتاح المطابقة"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_button_hide_rule__button_id
+msgid "View Button ID"
+msgstr "معرّف الزر في العرض"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_button_hide_rule__button_type
+msgid "Object Method"
+msgstr "دالة على النموذج"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_button_hide_rule__button_type
+msgid "Window Action"
+msgstr "إجراء نافذة"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields.selection,name:flous_menu_visibility.selection__flous_visibility_picker__target_type__button
+msgid "Button"
+msgstr "زر"
+
+#. module: flous_menu_visibility
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.button_hide_rule_form
+msgid "Hidden from Users"
+msgstr "مخفي عن المستخدمين"
+
+#. module: flous_menu_visibility
+#. odoo-javascript
+#: code:addons/flous_menu_visibility/static/src/visibility_picker/visibility_picker.js:0
+msgid "Click a field, list column, or view button to select it. Click a parent menu once to open it; double-click or Alt-click to select the parent menu."
+msgstr "اضغط على حقل أو عمود قائمة أو زر في العرض لتحديده. اضغط مرة على القائمة الرئيسية لفتحها، أو اضغط مرتين أو مع Alt لتحديدها."
+
+#. module: flous_menu_visibility
+#: code:addons/flous_menu_visibility/wizard/visibility_picker.py:0
+msgid "Only form and list view action buttons can be hidden."
+msgstr "يمكن إخفاء أزرار الإجراءات في عروض النماذج والقوائم فقط."
+
+#. module: flous_menu_visibility
+#: code:addons/flous_menu_visibility/wizard/visibility_picker.py:0
+msgid "The selected button could not be identified."
+msgstr "تعذر تحديد الزر المختار."

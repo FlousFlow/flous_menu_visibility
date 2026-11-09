@@ -11,11 +11,18 @@ class FlousVisibilityPicker(models.TransientModel):
     _description = 'Visibility Rule User Selection'
 
     target_type = fields.Selection(
-        [('field', 'Field'), ('menu', 'Menu')], required=True, readonly=True,
+        [('field', 'Field'), ('menu', 'Menu'), ('button', 'Button')], required=True, readonly=True,
     )
     model_id = fields.Many2one('ir.model', readonly=True)
     field_id = fields.Many2one('ir.model.fields', readonly=True)
     menu_id = fields.Many2one('ir.ui.menu', readonly=True)
+    button_name = fields.Char(readonly=True)
+    button_type = fields.Selection(
+        [('object', 'Object Method'), ('action', 'Window Action')], readonly=True,
+    )
+    button_id = fields.Char(readonly=True)
+    button_selector_key = fields.Char(readonly=True)
+    button_label = fields.Char(readonly=True)
     target_label = fields.Char(compute='_compute_target_label')
     user_ids = fields.Many2many(
         'res.users', string='Hide from Users',
@@ -68,6 +75,7 @@ class FlousVisibilityPicker(models.TransientModel):
     @api.depends(
         'target_type', 'model_id', 'field_id.field_description',
         'menu_id.complete_name',
+        'button_label', 'button_name',
     )
     def _compute_target_label(self):
         for wizard in self:
@@ -77,6 +85,10 @@ class FlousVisibilityPicker(models.TransientModel):
                 )
             elif wizard.target_type == 'menu' and wizard.menu_id:
                 wizard.target_label = wizard.menu_id.complete_name
+            elif wizard.target_type == 'button' and wizard.model_id:
+                wizard.target_label = '%s · %s' % (
+                    wizard.model_id.name, wizard.button_label or wizard.button_name,
+                )
             else:
                 wizard.target_label = ''
 
@@ -121,6 +133,33 @@ class FlousVisibilityPicker(models.TransientModel):
         })
         return wizard._get_dialog_action()
 
+    @api.model
+    def action_open_for_button(
+        self, model_name, button_name, button_type, button_id=False, button_label=False,
+    ):
+        self._check_visibility_admin()
+        if button_type not in ('object', 'action') or not button_name:
+            raise UserError(_('Only form and list view action buttons can be hidden.'))
+        model = self.env['ir.model'].sudo().search([('model', '=', model_name)], limit=1)
+        if not model:
+            raise UserError(_('The selected button could not be identified.'))
+        # Labels are translated and therefore deliberately excluded from the key.
+        selector_key = '%s|%s|%s' % (button_type, button_name, button_id or '')
+        rule = self.env['flous.button.hide.rule'].sudo().search([
+            ('model_id', '=', model.id), ('selector_key', '=', selector_key),
+        ], limit=1)
+        wizard = self.sudo().create({
+            'target_type': 'button',
+            'model_id': model.id,
+            'button_name': button_name,
+            'button_type': button_type,
+            'button_id': button_id or False,
+            'button_label': button_label or button_name,
+            'button_selector_key': selector_key,
+            'user_ids': [(6, 0, rule.user_ids.ids if rule and rule.active else [])],
+        })
+        return wizard._get_dialog_action()
+
     def _get_dialog_action(self):
         return {
             'type': 'ir.actions.act_window',
@@ -160,6 +199,26 @@ class FlousVisibilityPicker(models.TransientModel):
                 rule.write(values)
             else:
                 self.env['flous.field.hide.rule'].sudo().create(values)
+        elif self.target_type == 'button':
+            rule = self.env['flous.button.hide.rule'].sudo().search([
+                ('model_id', '=', self.model_id.id),
+                ('selector_key', '=', self.button_selector_key),
+            ], limit=1)
+            values = {
+                'name': _('Hide %s from selected users') % (self.button_label or self.button_name),
+                'model_id': self.model_id.id,
+                'button_name': self.button_name,
+                'button_type': self.button_type,
+                'button_id': self.button_id or False,
+                'button_label': self.button_label or self.button_name,
+                'selector_key': self.button_selector_key,
+                'user_ids': [(6, 0, selected_users.ids)],
+                'active': True,
+            }
+            if rule:
+                rule.write(values)
+            else:
+                self.env['flous.button.hide.rule'].sudo().create(values)
         else:
             raise UserError(_('The selected item type is not supported.'))
         return {'type': 'ir.actions.act_window_close'}

@@ -44,7 +44,7 @@ export class VisibilityPickerSystray extends Component {
             document.addEventListener("click", this.onDocumentClick, true);
             document.body.classList.add("o_flous_visibility_picker_active");
             this.pickerNotificationClose = this.notification.add(
-                _t("Click a field or list column to select it. Click a parent menu once to open it; double-click or Alt-click to select the parent menu."),
+                _t("Click a field, list column, or view button to select it. Click a parent menu once to open it; double-click or Alt-click to select the parent menu."),
                 { type: "info", sticky: true, title: _t("Visibility selection is active") },
             );
         } else {
@@ -59,6 +59,29 @@ export class VisibilityPickerSystray extends Component {
     }
 
     getTarget(eventTarget) {
+        const buttonNode = eventTarget.closest?.("button[name][type]");
+        if (
+            buttonNode &&
+            ["object", "action"].includes(buttonNode.getAttribute("type")) &&
+            buttonNode.closest(".o_form_view, .o_list_view") &&
+            !buttonNode.closest(".o_flous_visibility_picker")
+        ) {
+            const modelName = this.action.currentController?.props?.resModel;
+            if (modelName) {
+                return {
+                    node: buttonNode,
+                    type: "button",
+                    modelName,
+                    buttonName: buttonNode.getAttribute("name"),
+                    buttonType: buttonNode.getAttribute("type"),
+                    buttonId: buttonNode.getAttribute("id") || false,
+                    buttonLabel:
+                        buttonNode.querySelector(".o_stat_text")?.textContent.trim() ||
+                        buttonNode.getAttribute("string") ||
+                        buttonNode.textContent.trim(),
+                };
+            }
+        }
         const fieldNode = eventTarget.closest?.(".o_field_widget[name]");
         const fieldLabel = eventTarget.closest?.("label[for], .o_field_label[for]");
         const fieldId = fieldLabel?.getAttribute("for");
@@ -138,6 +161,18 @@ export class VisibilityPickerSystray extends Component {
             const action = target.type === "menu"
                 ? await this.orm.call(
                     "flous.visibility.picker", "action_open_for_menu", [target.xmlid]
+                )
+                : target.type === "button"
+                ? await this.orm.call(
+                    "flous.visibility.picker",
+                    "action_open_for_button",
+                    [
+                        target.modelName,
+                        target.buttonName,
+                        target.buttonType,
+                        target.buttonId,
+                        target.buttonLabel,
+                    ],
                 )
                 : await this.orm.call(
                     "flous.visibility.picker",
