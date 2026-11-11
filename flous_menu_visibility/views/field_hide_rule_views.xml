@@ -9,6 +9,7 @@
                 <field name="name"/>
                 <field name="model_id"/>
                 <field name="field_id"/>
+                <field name="visibility_mode"/>
                 <field name="field_string" optional="show"/>
                 <field name="user_count"/>
                 <field name="user_ids" widget="many2many_tags"/>
@@ -64,6 +65,7 @@
                             <field name="field_id"/>
                             <field name="field_string" readonly="1"/>
                             <field name="sequence"/>
+                            <field name="visibility_mode"/>
                         </group>
                     </group>
                     <separator string="Users Hidden from This Field"/>

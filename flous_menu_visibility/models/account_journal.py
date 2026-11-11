@@ -3,6 +3,7 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 from odoo import fields, models
+from .visibility_utils import visibility_mode_field
 
 
 class AccountJournal(models.Model):
@@ -22,10 +23,11 @@ class AccountJournal(models.Model):
         groups='base.group_system',
         help='Users for whom this journal will be hidden.',
     )
+    visibility_mode = visibility_mode_field(groups='base.group_system')
 
     def write(self, vals):
         res = super().write(vals)
-        if 'restricted_user_ids' in vals:
+        if 'restricted_user_ids' in vals or 'visibility_mode' in vals:
             # ir.access domains are cached per user (uid). Invalidate the
             # registry cache so the new restrictions apply immediately.
             self.env.transaction.invalidate_access_cache()

@@ -11,7 +11,7 @@
         <field name="name">Journal visibility (Flous Flow)</field>
         <field name="model_id" ref="account.model_account_journal"/>
         <field name="operation">r</field>
-        <field name="domain">['|', ('restricted_user_ids', '=', False), ('restricted_user_ids', 'not in', user.id)]</field>
+        <field name="domain">([('id', '!=', False)] if user.has_group('base.group_system') else ['|', '&amp;', ('visibility_mode', '=', 'hide'), ('restricted_user_ids', 'not in', user.id), '&amp;', ('visibility_mode', '=', 'show'), ('restricted_user_ids', 'in', user.id)])</field>
     </record>
 
     <!-- Journal entry (account.move) read restriction: moves of hidden
@@ -20,7 +20,7 @@
         <field name="name">Move visibility (Flous Flow)</field>
         <field name="model_id" ref="account.model_account_move"/>
         <field name="operation">r</field>
-        <field name="domain">['|', ('journal_id.restricted_user_ids', '=', False), ('journal_id.restricted_user_ids', 'not in', user.id)]</field>
+        <field name="domain">([('id', '!=', False)] if user.has_group('base.group_system') else ['|', '&amp;', ('journal_id.visibility_mode', '=', 'hide'), ('journal_id.restricted_user_ids', 'not in', user.id), '&amp;', ('journal_id.visibility_mode', '=', 'show'), ('journal_id.restricted_user_ids', 'in', user.id)])</field>
     </record>
 
     <!-- Journal item (account.move.line) read restriction: lines of hidden
@@ -29,6 +29,6 @@
         <field name="name">Move line visibility (Flous Flow)</field>
         <field name="model_id" ref="account.model_account_move_line"/>
         <field name="operation">r</field>
-        <field name="domain">['|', ('move_id.journal_id.restricted_user_ids', '=', False), ('move_id.journal_id.restricted_user_ids', 'not in', user.id)]</field>
+        <field name="domain">([('id', '!=', False)] if user.has_group('base.group_system') else ['|', '&amp;', ('move_id.journal_id.visibility_mode', '=', 'hide'), ('move_id.journal_id.restricted_user_ids', 'not in', user.id), '&amp;', ('move_id.journal_id.visibility_mode', '=', 'show'), ('move_id.journal_id.restricted_user_ids', 'in', user.id)])</field>
     </record>
 </odoo>

@@ -38,6 +38,10 @@ class FlousVisibilityPicker(models.TransientModel):
     button_hotkey = fields.Char(readonly=True)
     button_selector_key = fields.Char(readonly=True)
     button_label = fields.Char(readonly=True)
+    visibility_mode = fields.Selection(
+        [('hide', 'Hide from selected users'), ('show', 'Show only to selected users')],
+        string='Visibility Mode', required=True, default='hide',
+    )
     target_label = fields.Char(compute='_compute_target_label')
     user_ids = fields.Many2many(
         'res.users', string='Hide from Users',
@@ -134,6 +138,7 @@ class FlousVisibilityPicker(models.TransientModel):
             'target_type': 'field',
             'model_id': model.id,
             'field_id': field.id,
+            'visibility_mode': rule.visibility_mode if rule and rule.active else 'hide',
             'user_ids': [(6, 0, rule.user_ids.ids if rule and rule.active else [])],
         })
         return wizard._get_dialog_action()
@@ -147,6 +152,7 @@ class FlousVisibilityPicker(models.TransientModel):
         wizard = self.sudo().create({
             'target_type': 'menu',
             'menu_id': menu.id,
+            'visibility_mode': menu.visibility_mode,
             'user_ids': [(6, 0, menu.restricted_user_ids.ids)],
         })
         return wizard._get_dialog_action()
@@ -164,6 +170,7 @@ class FlousVisibilityPicker(models.TransientModel):
         wizard = self.sudo().create({
             'target_type': 'journal',
             'journal_id': journal.id,
+            'visibility_mode': journal.visibility_mode,
             'user_ids': [(6, 0, journal.restricted_user_ids.ids)],
         })
         return wizard._get_dialog_action()
@@ -206,6 +213,7 @@ class FlousVisibilityPicker(models.TransientModel):
             'button_hotkey': button_hotkey or False,
             'button_label': button_label or button_name,
             'button_selector_key': selector_key,
+            'visibility_mode': rule.visibility_mode if rule and rule.active else 'hide',
             'user_ids': [(6, 0, rule.user_ids.ids if rule and rule.active else [])],
         })
         return wizard._get_dialog_action()
@@ -213,7 +221,7 @@ class FlousVisibilityPicker(models.TransientModel):
     def _get_dialog_action(self):
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Hide Item from Users'),
+            'name': _('Visibility Rule'),
             'res_model': self._name,
             'res_id': self.id,
             'views': [(False, 'form')],
@@ -233,10 +241,12 @@ class FlousVisibilityPicker(models.TransientModel):
         if self.target_type == 'menu':
             self.menu_id.sudo().write({
                 'restricted_user_ids': [(6, 0, selected_users.ids)],
+                'visibility_mode': self.visibility_mode,
             })
         elif self.target_type == 'journal':
             self.journal_id.sudo().write({
                 'restricted_user_ids': [(6, 0, selected_users.ids)],
+                'visibility_mode': self.visibility_mode,
             })
         elif self.target_type == 'field':
             rule = self.env['flous.field.hide.rule'].sudo().search([
@@ -247,6 +257,7 @@ class FlousVisibilityPicker(models.TransientModel):
                 'model_id': self.model_id.id,
                 'field_id': self.field_id.id,
                 'user_ids': [(6, 0, selected_users.ids)],
+                'visibility_mode': self.visibility_mode,
                 'active': True,
             }
             if rule:
@@ -269,6 +280,7 @@ class FlousVisibilityPicker(models.TransientModel):
                 'button_label': self.button_label or self.button_name,
                 'selector_key': self.button_selector_key,
                 'user_ids': [(6, 0, selected_users.ids)],
+                'visibility_mode': self.visibility_mode,
                 'active': True,
             }
             if rule:

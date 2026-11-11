@@ -3,6 +3,7 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 from odoo import _, _lt, fields, models
+from .visibility_utils import visibility_mode_field
 
 
 class FlousButtonHideRule(models.Model):
@@ -15,6 +16,7 @@ class FlousButtonHideRule(models.Model):
     name = fields.Char(string='Rule Name', required=True)
     active = fields.Boolean(default=True)
     sequence = fields.Integer(default=10)
+    visibility_mode = visibility_mode_field()
     model_id = fields.Many2one('ir.model', string='Model', required=True, ondelete='cascade')
     model_name = fields.Char(
         string='Technical Model Name', related='model_id.model',

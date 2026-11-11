@@ -9,3 +9,4 @@ from . import button_hide_rule
 from . import ir_ui_view
 from . import stock_warehouse
 from . import account_journal
+from . import visibility_utils
