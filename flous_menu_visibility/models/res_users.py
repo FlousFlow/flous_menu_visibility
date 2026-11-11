@@ -55,14 +55,13 @@ class ResUsers(models.Model):
     def write(self, vals):
         res = super().write(vals)
         if 'visible_warehouse_ids' in vals or 'hidden_journal_ids' in vals:
-            # ir.rule domains are cached per user (uid). Invalidate the
+            # Record-rule domains are cached per user. Invalidate the
             # registry cache so the new restrictions apply immediately.
             self.env.registry.clear_cache()
         if 'hidden_journal_ids' in vals and not self.env.context.get('flous_skip_admin_guard'):
-            # Defense in depth: the administrator is never restricted.
-            admin = self.env.ref('base.user_admin')
-            if admin in self:
-                admin.with_context(flous_skip_admin_guard=True).sudo().write(
+            # Defense in depth: every system administrator is never restricted.
+            for user in self.filtered(lambda u: u.has_group('base.group_system')):
+                user.with_context(flous_skip_admin_guard=True).sudo().write(
                     {'hidden_journal_ids': [(5, 0, 0)]})
         return res
 

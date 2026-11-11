@@ -16,7 +16,7 @@ class TestMenuVisibility(TransactionCase):
         self.action = self.env['ir.actions.act_window'].create({
             'name': 'Flous Test Partner Action',
             'res_model': 'res.partner',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
         })
         self.menu = self.env['ir.ui.menu'].create({
             'name': 'Flous Test Menu',

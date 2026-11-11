@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_config_visibility_rule" model="ir.rule">
+        <field name="name">Point of Sale visibility (Flous Flow)</field>
+        <field name="model_id" ref="point_of_sale.model_pos_config"/>
+        <field name="groups" eval="[(5, 0, 0)]"/>
+        <field name="domain_force">['|', ('restricted_user_ids', '=', False), ('restricted_user_ids', 'not in', user.id)]</field>
+        <field name="perm_read" eval="True"/><field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/><field name="perm_unlink" eval="False"/>
+    </record>
+</odoo>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="button_hide_rule_list" model="ir.ui.view">
+        <field name="name">flous.button.hide.rule.list</field>
+        <field name="model">flous.button.hide.rule</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="button_label"/>
+                <field name="button_type"/>
+                <field name="user_count"/>
+                <field name="user_ids" widget="many2many_tags"/>
+                <field name="active" invisible="1"/>
+            </list>
+        </field>
+    </record>
+    <record id="button_hide_rule_form" model="ir.ui.view">
+        <field name="name">flous.button.hide.rule.form</field>
+        <field name="model">flous.button.hide.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="model_id"/>
+                            <field name="button_label"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="button_type"/>
+                            <field name="button_name"/>
+                            <field name="button_id"/>
+                            <field name="button_field_name"/>
+                            <field name="button_hotkey"/>
+                            <field name="selector_key" readonly="1"/>
+                        </group>
+                    </group>
+                    <separator string="Hidden from Users"/>
+                    <field name="user_count" readonly="1"/>
+                    <field name="user_ids" widget="many2many_tags"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="button_hide_rule_search" model="ir.ui.view">
+        <field name="name">flous.button.hide.rule.search</field>
+        <field name="model">flous.button.hide.rule</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="button_label"/>
+                <filter name="active" string="Active" domain="[('active', '=', True)]"/>
+                <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
+                <group><filter name="group_model" string="Model" context="{'group_by': 'model_id'}"/></group>
+            </search>
+        </field>
+    </record>
+    <record id="action_button_hide_rule" model="ir.actions.act_window">
+        <field name="name">Button Visibility Rules</field>
+        <field name="res_model">flous.button.hide.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="button_hide_rule_search"/>
+        <field name="context">{'search_default_active': 1}</field>
+    </record>
+    <menuitem id="menu_button_hide_rule" name="Button Visibility Rules"
+              parent="menu_visibility_control" action="action_button_hide_rule"
+              groups="base.group_system" sequence="45"/>
+</odoo>

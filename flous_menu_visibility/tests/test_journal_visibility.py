@@ -2,6 +2,7 @@
 # Copyright 2026 Flous Flow
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
+from odoo.exceptions import AccessError
 from odoo.tests.common import TransactionCase
 
 
@@ -75,6 +76,35 @@ class TestJournalVisibility(TransactionCase):
         """Selecting a user on the journal form reflects on the user record."""
         self.journal_a.restricted_user_ids = [(4, self.test_user.id)]
         self.assertIn(self.journal_a, self.test_user.hidden_journal_ids)
+
+    def test_visibility_picker_hides_selected_journal_for_users(self):
+        """The contextual picker applies restrictions to the selected journal."""
+        action = self.env['flous.visibility.picker'].action_open_for_journal(
+            self.journal_a.id,
+        )
+        wizard = self.env['flous.visibility.picker'].browse(action['res_id'])
+        self.assertEqual(wizard.target_type, 'journal')
+        self.assertEqual(wizard.journal_id, self.journal_a)
+        self.assertIn('Flous Journal A', wizard.target_label)
+
+        wizard.user_ids = [(6, 0, [self.test_user.id])]
+        wizard.action_apply()
+
+        self.assertIn(self.test_user, self.journal_a.restricted_user_ids)
+        self.assertNotIn(self.journal_a, self._visible_journals(self.test_user))
+        self.assertIn(self.journal_a, self._visible_journals(self.env.ref('base.user_admin')))
+
+        reopen_action = self.env['flous.visibility.picker'].action_open_for_journal(
+            self.journal_a.id,
+        )
+        reopened = self.env['flous.visibility.picker'].browse(reopen_action['res_id'])
+        self.assertIn(self.test_user, reopened.user_ids)
+
+    def test_non_admin_cannot_open_journal_picker(self):
+        with self.assertRaises(AccessError):
+            self.env['flous.visibility.picker'].with_user(self.test_user).action_open_for_journal(
+                self.journal_a.id,
+            )
 
     def test_moves_and_lines_hidden_for_restricted_user(self):
         """Moves and move lines of a hidden journal are not readable."""

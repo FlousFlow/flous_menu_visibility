@@ -2,7 +2,7 @@
 # Copyright 2026 Flous Flow
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class IrUiMenu(models.Model):
@@ -23,7 +23,6 @@ class IrUiMenu(models.Model):
         help='Users for whom this menu will be hidden.',
     )
 
-    @api.returns('self')
     def _filter_visible_menus(self):
         """Hide restricted menus for the current user.
 

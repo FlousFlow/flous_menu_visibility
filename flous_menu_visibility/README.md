@@ -1,23 +1,77 @@
-# Menu, Field, Warehouse & Journal Visibility Control
+# Menu, Field, Button, Warehouse & Journal Visibility Control
 
-**Flous Flow** — Odoo module to hide specific menu items, hide specific
-fields, restrict warehouse operations per user, and hide accounting
-journals per user.
+**Flous Flow** — Odoo module to hide specific menu items, fields and view
+buttons, restrict warehouse operations per user, and hide accounting journals.
 
 ## Features
 
-- **Hide menus per user** — configure from the user form or the menu form
-  (both stay in sync).
+- **Central Visibility Control** — configure menus, fields, buttons, journals and
+  warehouses from **Settings → Visibility Control**. Rules are not exposed
+  as tabs on individual user forms.
+- **Pick from the interface** — system administrators can enable **Visibility**
+  in the systray, point at a menu item, form field, list column, or an accounting
+  journal row, and choose the internal users who should not see it.
+- **Hide view buttons per user** — select an Odoo form or list action button,
+  then choose which internal users should not see it. Manage saved rules from
+  **Settings → Visibility Control → Button Visibility Rules**.
+- **Hide embedded list controls** — select controls such as **Add a line** in
+  one-to-many lists without hiding the whole field.
+- **Hide menus per user** — select restricted users from the central menu list.
 - **Hide fields per user** — e.g. hide `list_price` (sale price) or
   `standard_price` (cost price) on the product form from specific users.
 - **Restrict warehouse operations per user** — users in the "Warehouse
   Visibility" group only see operations of their assigned warehouses.
 - **Hide accounting journals per user** — a restricted user cannot read the
-  journal, its entries or their lines (real record rules, not just UI).
+  journal, its entries or their lines (server-side access restrictions, not just UI).
+  Select a journal directly from the Journals list with the Visibility picker.
+- **Responsive admin screens** — the visibility lists use readable cards on
+  phones and retain sortable tables on wider screens. User assignments wrap
+  cleanly, and the field picker dialog keeps its actions visible on small screens.
 - Hiding a field sets `invisible="1"` on the view node — the value stays
   loaded, so view expressions/domains keep working and **the view is never
   broken**.
 - System administrators (`base.group_system`) always see everything.
+- Menu and field visibility affect the interface. They do not secure the
+  underlying field value from exports, reports, RPC or other server-side
+  access; use Odoo access rights for confidential data.
+
+### Select an item directly
+
+1. Sign in as a system administrator and open the menu or model view.
+2. Click **Visibility** in the top bar. The button stays active while the
+   pointer highlights selectable items. An on-screen notice explains the
+   current selection controls.
+3. Point at a menu entry, a field on a form, or a column heading in a list and
+   click it. This pauses the interface and opens the user selector.
+   For nested menus, click a parent once to open it, then select a child. To
+   select the parent itself, double-click it or use Alt-click.
+4. Search for internal users in the selector, or use **Select All Internal
+   Users** / **Clear Selection**. The selected-user count updates with the
+   selection. Click **Apply** to save. Applying an empty selection clears the
+   restriction for that menu or field.
+
+The picker creates or updates the same rules managed from **Settings →
+Visibility Control**. It supports menu entries, form fields, list columns, and
+view action buttons. Button rules match the technical method/action name and
+type; when a view button has an XML `id`, it is included to distinguish it.
+Buttons that reuse the same technical name and type without an ID across views
+of the same model share a rule.
+
+Administrators can edit or delete field rules from **Settings → Visibility
+Control → Field Visibility Rules**. The list shows each model/field target,
+selected users and the user count.
+
+Button hiding changes interface visibility only. It does not block the button's
+server-side method or action from being called through RPC; use access rights
+and server-side checks when an action must be restricted for security.
+
+The optional companion addon `flous_menu_visibility_pos` is installed
+automatically when both this module and Odoo Point of Sale are installed. It adds
+**Hidden Points of Sale** under **Settings → Visibility Control** without making
+Point of Sale a dependency of this core addon. Databases that already had both
+modules installed before this automatic integration was added may need a
+one-time installation of **Flous Flow POS Visibility** from Apps. Close active
+sessions before restricting a POS configuration.
 
 ## Part 1 — Hide menus
 
@@ -63,11 +117,9 @@ warehouse's operations**.
 
 ### How to use
 
-1. **Settings → Users & Companies → Users**, open the warehouse operator.
-2. Add them to the **Warehouse Visibility** group (Settings → Users →
-   Groups → Warehouse Visibility).
-3. On the **Visible Warehouses** page, select the warehouses whose operations
-   they may see.
+1. Open **Settings → Visibility Control → Warehouse Visibility**.
+2. Add the operator to the **Warehouse Visibility** group.
+3. On each warehouse row, select the users allowed to see its operations.
 
 From then on, that user only sees operations (receipts, deliveries, internal
 transfers) of those warehouses — not in the Operations dashboard, not in the
@@ -93,13 +145,11 @@ the restriction is not neutralized. The rules apply to **read** only.
 
 ### How to use
 
-1. **Settings → Users & Companies → Users**, open a user.
-2. On the **Hidden Journals** page (admins only), add the journals to hide
-   for that user.
+1. Open **Settings → Visibility Control → Hidden Journals**.
+2. On each journal row, select the users for whom it must be hidden.
 
-Alternatively, open **Accounting → Configuration → Journals**, and on the
-**Restricted Users** tab pick the users that must not see the journal. Both
-sides stay in sync natively.
+The journal form's **Restricted Users** field remains synchronized with this
+central list.
 
 ### Technical notes
 
@@ -107,9 +157,9 @@ sides stay in sync natively.
 |--------------------|-------------------------------------------|-----------------------------------|
 | `res.users`        | `hidden_journal_ids` (M2M → `account.journal`) | Journals hidden for the user |
 | `account.journal`  | `restricted_user_ids` (M2M → `res.users`) | Inverse side (same table)         |
-| `account.journal`  | `ir.rule` `journal_visibility_rule`        | Hides journals where the user is restricted |
-| `account.move`     | `ir.rule` `move_visibility_rule`           | Hides entries of hidden journals  |
-| `account.move.line`| `ir.rule` `move_line_visibility_rule`      | Hides items of hidden journals    |
+| `account.journal`  | `ir.rule` `journal_visibility_rule`       | Hides journals where the user is restricted |
+| `account.move`     | `ir.rule` `move_visibility_rule`          | Hides entries of hidden journals  |
+| `account.move.line`| `ir.rule` `move_line_visibility_rule`     | Hides items of hidden journals    |
 
 The three rules are **global rules** (AND-ed with every group rule), so
 permissive "see-all" group rules from `account` cannot neutralize them.
@@ -121,21 +171,21 @@ never restricted. The rules apply to **read** only.
 
 ```bash
 # from the Odoo source directory (installs the `stock` and `account` deps too)
-./odoo-bin -c odoo.conf -d odoo18 -i flous_menu_visibility --stop-after-init
+./odoo-bin -c odoo.conf -d odoo20 -i flous_menu_visibility --stop-after-init
 ```
 
 To upgrade an already-installed copy:
 
 ```bash
-./odoo-bin -c odoo.conf -d odoo18 -u flous_menu_visibility --stop-after-init
+./odoo-bin -c odoo.conf -d odoo20 -u flous_menu_visibility --stop-after-init
 ```
 
 ## Manual test checklist
 
 ### Menus
 - [ ] Module installs/upgrades without errors.
-- [ ] Internal (non-admin) user form shows the "Hidden Menus" page.
-- [ ] Adding a menu in the user form also shows the user on the menu form (and vice versa).
+- [ ] **Settings → Visibility Control → Hidden Menus** is visible to administrators.
+- [ ] Adding a restricted user on a menu updates the inverse field (and vice versa).
 - [ ] The restricted user no longer sees the menu after reload; other users and the admin still do.
 
 ### Fields
@@ -153,7 +203,7 @@ To upgrade an already-installed copy:
 - [ ] Removing the user from the group restores full visibility.
 
 ### Journals
-- [ ] User form shows the "Hidden Journals" page (admins only).
+- [ ] **Settings → Visibility Control → Hidden Journals** is visible to administrators.
 - [ ] Journal form shows the "Restricted Users" tab (admins only).
 - [ ] Hiding a journal from a user also shows the user on the journal form (and vice versa).
 - [ ] The restricted user no longer sees the journal in Accounting, and cannot open its entries or items.
@@ -163,7 +213,7 @@ To upgrade an already-installed copy:
 ## Automated tests
 
 ```bash
-./odoo-bin -c odoo.conf -d odoo18 -u flous_menu_visibility --test-enable --stop-after-init
+./odoo-bin -c odoo.conf -d odoo20 -u flous_menu_visibility --test-enable --stop-after-init
 ```
 
 ## Known limitations

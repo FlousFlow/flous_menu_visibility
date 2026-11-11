@@ -1,0 +1,164 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 20.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-31 00:00+0000\n"
+"PO-Revision-Date: 2026-10-31 00:00+0000\n"
+"Last-Translator: Flous Flow\n"
+"Language-Team: Arabic\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: flous_menu_visibility_pos
+#: model:ir.module.module,description:base.module_flous_menu_visibility_pos
+msgid ""
+"\n"
+"Optional integration for Menu, Field, Warehouse & Journal Visibility Control.\n"
+"It installs automatically when both this module and Odoo Point of Sale are installed.\n"
+"\n"
+"Administrators can restrict a POS configuration for selected internal users.\n"
+"Restricted configurations are removed from the POS dashboard, and starting\n"
+"one through its backend action or direct URL is blocked. Existing active POS\n"
+"sessions must be closed before a restriction can be applied; the module does\n"
+"not close sessions or interfere with orders.\n"
+msgstr ""
+"إضافة تكامل اختيارية للتحكم في إظهار القوائم والحقول والمخازن ودفاتر اليومية.\n"
+"يتم تثبيتها تلقائيًا عند تثبيت هذه الإضافة ونظام نقاط البيع في أودو.\n"
+"\n"
+"يمكن للمسؤولين تقييد إعداد نقطة بيع لمستخدمين داخليين محددين. تُزال الإعدادات المقيّدة من لوحة نقاط البيع، ويُمنع تشغيلها من الإجراء الخلفي أو عبر رابط مباشر. يجب إغلاق جلسات نقاط البيع النشطة قبل تطبيق التقييد؛ ولا تقوم الإضافة بإغلاق الجلسات أو التدخل في الطلبات."
+
+#. module: flous_menu_visibility_pos
+#. odoo-python
+#: code:addons/flous_menu_visibility_pos/models/pos_config.py:0
+msgid ""
+"Close the active POS session before restricting this point of sale. This "
+"protects in-progress sales and unsynchronized orders."
+msgstr ""
+"أغلق جلسة نقطة البيع النشطة قبل تقييدها. يحافظ ذلك على المبيعات الجارية "
+"والطلبات التي لم تتم مزامنتها."
+
+#. module: flous_menu_visibility_pos
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility_pos.pos_config_view_form_visibility
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility_pos.view_visibility_pos_config_form
+msgid ""
+"Close the active session before restricting this point of sale.\n"
+"                        Existing sessions are never closed automatically."
+msgstr ""
+"أغلق الجلسة النشطة قبل تقييد نقطة البيع.\n"
+"                        لا يتم إغلاق الجلسات الحالية تلقائيًا."
+
+#. modules: flous_menu_visibility, flous_menu_visibility_pos
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_account_journal__display_name
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_field_hide_rule__display_name
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_visibility_picker__display_name
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_ir_ui_menu__display_name
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_ir_ui_view__display_name
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_res_users__display_name
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_stock_warehouse__display_name
+#: model:ir.model.fields,field_description:flous_menu_visibility_pos.field_pos_config__display_name
+#: model:ir.model.fields,field_description:flous_menu_visibility_pos.field_pos_session__display_name
+msgid "Display Name"
+msgstr "الاسم المعروض"
+
+#. module: flous_menu_visibility_pos
+#: model:ir.module.module,shortdesc:base.module_flous_menu_visibility_pos
+msgid "Flous Flow POS Visibility"
+msgstr "إدارة إظهار نقاط البيع - فلوس فلو"
+
+#. module: flous_menu_visibility_pos
+#: model:ir.module.module,summary:base.module_flous_menu_visibility_pos
+msgid "Hide selected points of sale from specific users."
+msgstr "إخفاء نقاط البيع المحددة عن مستخدمين بعينهم."
+
+#. modules: flous_menu_visibility, flous_menu_visibility_pos
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_account_journal__id
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_field_hide_rule__id
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_visibility_picker__id
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_ir_ui_menu__id
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_ir_ui_view__id
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_res_users__id
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_stock_warehouse__id
+#: model:ir.model.fields,field_description:flous_menu_visibility_pos.field_pos_config__id
+#: model:ir.model.fields,field_description:flous_menu_visibility_pos.field_pos_session__id
+msgid "ID"
+msgstr "المعرّف"
+
+#. module: flous_menu_visibility_pos
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility_pos.view_visibility_pos_config_form
+msgid "Point of Sale"
+msgstr "نقطة البيع"
+
+#. module: flous_menu_visibility_pos
+#: model:ir.model,name:flous_menu_visibility_pos.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "إعداد نقطة البيع"
+
+#. module: flous_menu_visibility_pos
+#: model:ir.model,name:flous_menu_visibility_pos.model_pos_session
+msgid "Point of Sale Session"
+msgstr "جلسة نقطة البيع"
+
+#. module: flous_menu_visibility_pos
+#: model:ir.actions.act_window,name:flous_menu_visibility_pos.action_visibility_pos_config
+#: model:ir.ui.menu,name:flous_menu_visibility_pos.menu_visibility_pos_config
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility_pos.view_visibility_pos_config_form
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility_pos.view_visibility_pos_config_list
+msgid "Point of Sale Visibility"
+msgstr "إدارة إظهار نقاط البيع"
+
+#. modules: flous_menu_visibility, flous_menu_visibility_pos
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_account_journal__restricted_user_ids
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_ir_ui_menu__restricted_user_ids
+#: model:ir.model.fields,field_description:flous_menu_visibility_pos.field_pos_config__restricted_user_ids
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.edit_menu_access_restricted_users
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.view_account_journal_form_restricted_users
+msgid "Restricted Users"
+msgstr "المستخدمون المقيّدون"
+
+#. modules: flous_menu_visibility, flous_menu_visibility_pos
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.view_visibility_journal_kanban
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility.view_visibility_menu_kanban
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility_pos.view_visibility_pos_config_kanban
+msgid "Restricted users"
+msgstr "المستخدمون المقيّدون"
+
+#. module: flous_menu_visibility_pos
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility_pos.view_visibility_pos_config_form
+msgid ""
+"Select the internal users who must not see or start this point of sale.\n"
+"                        System administrators always retain access."
+msgstr ""
+"حدد المستخدمين الداخليين الممنوعين من رؤية نقطة البيع أو تشغيلها. يحتفظ "
+"مديرو النظام بإمكانية الوصول دائمًا."
+
+#. module: flous_menu_visibility_pos
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility_pos.view_visibility_pos_config_form
+msgid "Select users who must not see this point of sale..."
+msgstr "حدد المستخدمين الممنوعين من رؤية نقطة البيع..."
+
+#. module: flous_menu_visibility_pos
+#: model:ir.model.fields,help:flous_menu_visibility_pos.field_pos_config__restricted_user_ids
+msgid ""
+"These users cannot see or start this point of sale. Close any active session"
+" before applying a restriction."
+msgstr ""
+"لن يتمكن هؤلاء المستخدمون من رؤية نقطة البيع أو تشغيلها. أغلق أي جلسة نشطة "
+"قبل تطبيق التقييد."
+
+#. modules: flous_menu_visibility, flous_menu_visibility_pos
+#. odoo-javascript
+#: code:addons/flous_menu_visibility/static/src/visibility_picker/visibility_picker.xml:0
+#: model_terms:ir.ui.view,arch_db:flous_menu_visibility_pos.pos_config_view_form_visibility
+msgid "Visibility"
+msgstr "الإظهار"
+
+#. module: flous_menu_visibility_pos
+#. odoo-python
+#: code:addons/flous_menu_visibility_pos/models/pos_config.py:0
+msgid ""
+"You are not allowed to open this point of sale. Contact your administrator."
+msgstr "غير مسموح لك بفتح نقطة البيع هذه. تواصل مع مدير النظام."

@@ -9,7 +9,7 @@
             <xpath expr="//notebook" position="inside">
                 <page name="restricted_users" string="Restricted Users"
                       groups="base.group_system">
-                    <field name="restricted_user_ids"/>
+                    <field name="restricted_user_ids" widget="many2many_tags"/>
                 </page>
             </xpath>
         </field>

@@ -1,7 +1,10 @@
 # Flous Flow — Odoo 18 Visibility Control
 
-Menu, Field, Warehouse & Journal Visibility Control — hide menus, hide
-fields, restrict warehouse operations and hide accounting journals per user.
+This branch targets Odoo 18.0.
+
+Menu, Field, Button, Warehouse & Journal Visibility Control — hide menus,
+fields and view buttons, restrict warehouse operations and hide accounting
+journals per user.
 
 The module lives in the `flous_menu_visibility/` folder.
 
