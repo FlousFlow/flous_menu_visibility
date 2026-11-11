@@ -1,10 +1,7 @@
-# Flous Flow — Odoo 20 Visibility Control
+# Flous Flow — Odoo 19 Visibility Control
 
-This branch targets Odoo 20.0.
-
-Menu, Field, Button, Warehouse & Journal Visibility Control — hide menus,
-fields and view buttons, restrict warehouse operations and hide accounting
-journals per user.
+Menu, Field, Warehouse & Journal Visibility Control — hide menus, hide
+fields, restrict warehouse operations and hide accounting journals per user.
 
 The module lives in the `flous_menu_visibility/` folder.
 

@@ -3,12 +3,13 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 from odoo import models
+from .visibility_utils import is_visible_for_user
 
 
 class IrUiView(models.Model):
     """Hide configured fields and buttons at view-render time.
 
-    Odoo 20 calls ``_postprocess_access_rights`` once per requested view,
+    Odoo 19 calls ``_postprocess_access_rights`` once per requested view,
     on the *combined* arch, *after* the (group-based) cache is read. This
     makes it the ideal single hook for per-user field visibility: the change
     is applied per request, so the shared view cache is never polluted.
@@ -29,13 +30,13 @@ class IrUiView(models.Model):
         if 'flous.field.hide.rule' in self.env:
             rules = self.env['flous.field.hide.rule'].sudo().search([
                 ('active', '=', True),
-                ('user_ids', 'in', self.env.user.id),
             ])
             # Ignore incomplete/stale rules defensively.
             hidden_fields = {
                 rule.field_id.name
                 for rule in rules
                 if rule.field_id and rule.model_id
+                and is_visible_for_user(rule.user_ids, rule.visibility_mode, self.env.user) is False
                 and rule.model_id.model == model_name
             }
 
@@ -50,9 +51,11 @@ class IrUiView(models.Model):
         if 'flous.button.hide.rule' in self.env:
             button_rules = self.env['flous.button.hide.rule'].sudo().search([
                 ('active', '=', True),
-                ('user_ids', 'in', self.env.user.id),
                 ('model_name', '=', model_name),
             ])
+            button_rules = button_rules.filtered(lambda rule: not is_visible_for_user(
+                rule.user_ids, rule.visibility_mode, self.env.user
+            ))
             rules_by_selector = {
                 (rule.button_type, rule.button_name, rule.button_id or '')
                 for rule in button_rules
