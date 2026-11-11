@@ -83,6 +83,14 @@ class TestPosVisibility(TransactionCase):
 
         self.assertIn(self.config_a, self._visible_configs(self.other_user))
 
+    def test_show_mode_only_selected_user_can_open_pos(self):
+        self.config_a.write({
+            'visibility_mode': 'show',
+            'restricted_user_ids': [(4, self.user.id)],
+        })
+        self.assertIn(self.config_a, self._visible_configs(self.user))
+        self.assertNotIn(self.config_a, self._visible_configs(self.other_user))
+
     def test_system_administrator_always_sees_restricted_config(self):
         self.config_a.restricted_user_ids = [(4, self.user.id)]
         admin = self.env.ref('base.user_admin')

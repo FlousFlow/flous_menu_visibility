@@ -3,6 +3,7 @@
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
 from odoo import fields, models
+from .visibility_utils import visibility_mode_field, is_visible_for_user
 
 
 class IrUiMenu(models.Model):
@@ -22,6 +23,10 @@ class IrUiMenu(models.Model):
         string='Restricted Users',
         help='Users for whom this menu will be hidden.',
     )
+    visibility_mode = visibility_mode_field(
+        groups='base.group_system',
+        help='Hide this menu from selected users, or show it only to selected users.',
+    )
 
     def _filter_visible_menus(self):
         """Hide restricted menus for the current user.
@@ -34,7 +39,6 @@ class IrUiMenu(models.Model):
         menus = super()._filter_visible_menus()
         if not menus or self.env.user.has_group('base.group_system'):
             return menus
-        hidden = self.env.user.hidden_menu_ids
-        if not hidden:
-            return menus
-        return menus.filtered(lambda menu: menu not in hidden)
+        return menus.filtered(lambda menu: is_visible_for_user(
+            menu.sudo().restricted_user_ids, menu.sudo().visibility_mode, self.env.user
+        ))

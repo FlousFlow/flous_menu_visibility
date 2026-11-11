@@ -59,6 +59,12 @@ class TestMenuVisibility(TransactionCase):
         visible = self.menu.with_env(env)._filter_visible_menus()
         self.assertIn(self.menu, visible)
 
+    def test_show_mode_only_selected_user_sees_menu(self):
+        other = self._new_internal_user('flous_menu_show_other_user')
+        self.menu.write({'visibility_mode': 'show', 'restricted_user_ids': [(4, self.test_user.id)]})
+        self.assertIn(self.menu, self.menu.with_user(self.test_user)._filter_visible_menus())
+        self.assertNotIn(self.menu, self.menu.with_user(other)._filter_visible_menus())
+
     def test_admin_sees_everything(self):
         """System administrators always see restricted menus."""
         admin = self.env.ref('base.user_admin')

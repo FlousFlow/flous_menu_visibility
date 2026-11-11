@@ -6,6 +6,11 @@ from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, ValidationError
 
 
+def _is_visible_for_user(selected_users, mode, user):
+    selected = user in selected_users
+    return not selected if mode == 'hide' else selected
+
+
 class PosConfig(models.Model):
     _inherit = 'pos.config'
 
@@ -20,12 +25,20 @@ class PosConfig(models.Model):
         help='These users cannot see or start this point of sale. '
              'Close any active session before applying a restriction.',
     )
+    visibility_mode = fields.Selection(
+        [('hide', 'Hide from selected users'), ('show', 'Show only to selected users')],
+        string='Visibility Mode', required=True, default='hide',
+        groups='base.group_system',
+        help='Hide from selected users, or show this point of sale only to selected users.',
+    )
 
     def _is_restricted_for_current_user(self):
         self.ensure_one()
         if self.env.user.has_group('base.group_system'):
             return False
-        return self.env.user in self.sudo().restricted_user_ids
+        return not _is_visible_for_user(
+            self.sudo().restricted_user_ids, self.sudo().visibility_mode, self.env.user
+        )
 
     def _check_visibility_access(self):
         restricted = self.filtered(lambda config: config._is_restricted_for_current_user())
@@ -41,7 +54,9 @@ class PosConfig(models.Model):
         return configs
 
     def write(self, vals):
-        restriction_field_changed = 'restricted_user_ids' in vals
+        restriction_field_changed = (
+            'restricted_user_ids' in vals or 'visibility_mode' in vals
+        )
         previous_restrictions = {}
         if restriction_field_changed:
             previous_restrictions = {

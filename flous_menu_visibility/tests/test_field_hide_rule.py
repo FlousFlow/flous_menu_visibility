@@ -31,12 +31,13 @@ class TestFieldHideRule(TransactionCase):
             'groups_id': [(6, 0, [self.internal_group.id])],
         })
 
-    def _create_rule(self, user_ids):
+    def _create_rule(self, user_ids, visibility_mode='hide'):
         return self.env['flous.field.hide.rule'].create({
             'name': 'Hide partner name',
             'model_id': self.partner_model.id,
             'field_id': self.name_field.id,
             'user_ids': [(6, 0, user_ids)],
+            'visibility_mode': visibility_mode,
         })
 
     def _get_arch(self, user):
@@ -69,6 +70,12 @@ class TestFieldHideRule(TransactionCase):
         other = self._new_internal_user('flous_field_other_user')
         arch = self._get_arch(other)
         self.assertFalse(self._node_invisible(arch))
+
+    def test_show_mode_hides_field_from_unselected_user(self):
+        self._create_rule([self.test_user.id], 'show')
+        other = self._new_internal_user('flous_field_show_other_user')
+        self.assertFalse(self._node_invisible(self._get_arch(self.test_user)))
+        self.assertTrue(self._node_invisible(self._get_arch(other)))
 
     def test_admin_always_sees_field(self):
         """System administrators are never restricted."""

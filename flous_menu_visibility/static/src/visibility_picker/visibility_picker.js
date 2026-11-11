@@ -108,8 +108,8 @@ export class VisibilityPickerSystray extends Component {
         const controller = this.action.currentController;
         const modelName = controller?.props?.resModel;
         if (modelName === "account.journal") {
-            const journalRow = eventTarget.closest?.("tr.o_data_row[data-res-id]");
-            const journalId = Number(journalRow?.getAttribute("data-res-id"));
+            const journalRow = eventTarget.closest?.("tr.o_data_row[data-id]");
+            const journalId = Number(journalRow?.getAttribute("data-id"));
             if (journalRow && Number.isInteger(journalId) && journalId > 0) {
                 const nameCell = journalRow.querySelector(
                     'td[name="name"], td[data-name="name"]'

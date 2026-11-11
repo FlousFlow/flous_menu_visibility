@@ -703,3 +703,23 @@ msgstr "تعذر تحديد أداة القائمة المختارة."
 #: code:addons/flous_menu_visibility/wizard/visibility_picker.py:0
 msgid "The selected journal could not be identified."
 msgstr "تعذر تحديد دفتر اليومية المختار."
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_field_hide_rule__visibility_mode
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_button_hide_rule__visibility_mode
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_ir_ui_menu__visibility_mode
+#: model:ir.model.fields,field_description:flous_menu_visibility.field_account_journal__visibility_mode
+msgid "Visibility Mode"
+msgstr "وضع الظهور"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields.selection,name:flous_menu_visibility.selection__flous_field_hide_rule__visibility_mode__hide
+#: model:ir.model.fields.selection,name:flous_menu_visibility.selection__flous_button_hide_rule__visibility_mode__hide
+msgid "Hide from selected users"
+msgstr "إخفاء عن المستخدمين المحددين"
+
+#. module: flous_menu_visibility
+#: model:ir.model.fields.selection,name:flous_menu_visibility.selection__flous_field_hide_rule__visibility_mode__show
+#: model:ir.model.fields.selection,name:flous_menu_visibility.selection__flous_button_hide_rule__visibility_mode__show
+msgid "Show only to selected users"
+msgstr "إظهار للمستخدمين المحددين فقط"

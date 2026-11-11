@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//sheet" position="inside">
                 <group string="Visibility" groups="base.group_system">
+                    <field name="visibility_mode"/>
                     <field name="restricted_user_ids" widget="many2many_tags"
                            options="{'no_create': True, 'no_quick_create': True}"/>
                     <div class="alert alert-info" role="status">

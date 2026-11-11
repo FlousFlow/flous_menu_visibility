@@ -4,6 +4,7 @@
 
 from odoo import _, _lt, api, fields, models
 from odoo.exceptions import ValidationError
+from .visibility_utils import visibility_mode_field
 
 
 class FlousFieldHideRule(models.Model):
@@ -26,6 +27,7 @@ class FlousFieldHideRule(models.Model):
     )
     active = fields.Boolean(string='Active', default=True)
     sequence = fields.Integer(string='Sequence', default=10)
+    visibility_mode = visibility_mode_field()
 
     model_id = fields.Many2one(
         'ir.model', string='Model', required=True, ondelete='cascade',
