@@ -65,14 +65,6 @@ Button hiding changes interface visibility only. It does not block the button's
 server-side method or action from being called through RPC; use access rights
 and server-side checks when an action must be restricted for security.
 
-The optional companion addon `flous_menu_visibility_pos` is installed
-automatically when both this module and Odoo Point of Sale are installed. It adds
-**Hidden Points of Sale** under **Settings → Visibility Control** without making
-Point of Sale a dependency of this core addon. Databases that already had both
-modules installed before this automatic integration was added may need a
-one-time installation of **Flous Flow POS Visibility** from Apps. Close active
-sessions before restricting a POS configuration.
-
 ## Part 1 — Hide menus
 
 | Model        | Field                              | Description                              |

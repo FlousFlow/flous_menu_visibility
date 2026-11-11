@@ -162,7 +162,7 @@ msgstr "أنشأه"
 msgid "Created on"
 msgstr "تاريخ الإنشاء"
 
-#. modules: flous_menu_visibility, flous_menu_visibility_pos
+#. module: flous_menu_visibility
 #: model:ir.model.fields,field_description:flous_menu_visibility.field_account_journal__display_name
 #: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_field_hide_rule__display_name
 #: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_visibility_picker__display_name
@@ -170,8 +170,6 @@ msgstr "تاريخ الإنشاء"
 #: model:ir.model.fields,field_description:flous_menu_visibility.field_ir_ui_view__display_name
 #: model:ir.model.fields,field_description:flous_menu_visibility.field_res_users__display_name
 #: model:ir.model.fields,field_description:flous_menu_visibility.field_stock_warehouse__display_name
-#: model:ir.model.fields,field_description:flous_menu_visibility_pos.field_pos_config__display_name
-#: model:ir.model.fields,field_description:flous_menu_visibility_pos.field_pos_session__display_name
 msgid "Display Name"
 msgstr "الاسم المعروض"
 
@@ -255,7 +253,7 @@ msgid ""
 msgstr ""
 "إخفاء القوائم والحقول حسب المستخدم باستخدام أداة تحديد مرئية وضوابط الوصول."
 
-#. modules: flous_menu_visibility, flous_menu_visibility_pos
+#. module: flous_menu_visibility
 #: model:ir.model.fields,field_description:flous_menu_visibility.field_account_journal__id
 #: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_field_hide_rule__id
 #: model:ir.model.fields,field_description:flous_menu_visibility.field_flous_visibility_picker__id
@@ -263,8 +261,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:flous_menu_visibility.field_ir_ui_view__id
 #: model:ir.model.fields,field_description:flous_menu_visibility.field_res_users__id
 #: model:ir.model.fields,field_description:flous_menu_visibility.field_stock_warehouse__id
-#: model:ir.model.fields,field_description:flous_menu_visibility_pos.field_pos_config__id
-#: model:ir.model.fields,field_description:flous_menu_visibility_pos.field_pos_session__id
 msgid "ID"
 msgstr "المعرّف"
 
@@ -374,19 +370,17 @@ msgid ""
 "Required fields cannot be hidden because the form may no longer be saveable."
 msgstr "لا يمكن إخفاء الحقول المطلوبة؛ فقد يتعذر حفظ النموذج بعد ذلك."
 
-#. modules: flous_menu_visibility, flous_menu_visibility_pos
+#. module: flous_menu_visibility
 #: model:ir.model.fields,field_description:flous_menu_visibility.field_account_journal__restricted_user_ids
 #: model:ir.model.fields,field_description:flous_menu_visibility.field_ir_ui_menu__restricted_user_ids
-#: model:ir.model.fields,field_description:flous_menu_visibility_pos.field_pos_config__restricted_user_ids
 #: model_terms:ir.ui.view,arch_db:flous_menu_visibility.edit_menu_access_restricted_users
 #: model_terms:ir.ui.view,arch_db:flous_menu_visibility.view_account_journal_form_restricted_users
 msgid "Restricted Users"
 msgstr "المستخدمون المقيدون"
 
-#. modules: flous_menu_visibility, flous_menu_visibility_pos
+#. module: flous_menu_visibility
 #: model_terms:ir.ui.view,arch_db:flous_menu_visibility.view_visibility_journal_kanban
 #: model_terms:ir.ui.view,arch_db:flous_menu_visibility.view_visibility_menu_kanban
-#: model_terms:ir.ui.view,arch_db:flous_menu_visibility_pos.view_visibility_pos_config_kanban
 msgid "Restricted users"
 msgstr "المستخدمون المقيّدون"
 
@@ -525,10 +519,9 @@ msgstr "المستخدمون الذين ستُخفى لهم هذه القائم�
 msgid "View"
 msgstr "العرض"
 
-#. modules: flous_menu_visibility, flous_menu_visibility_pos
+#. module: flous_menu_visibility
 #. odoo-javascript
 #: code:addons/flous_menu_visibility/static/src/visibility_picker/visibility_picker.xml:0
-#: model_terms:ir.ui.view,arch_db:flous_menu_visibility_pos.pos_config_view_form_visibility
 msgid "Visibility"
 msgstr "الإظهار"
 
