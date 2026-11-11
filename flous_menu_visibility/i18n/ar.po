@@ -723,3 +723,9 @@ msgstr "إخفاء عن المستخدمين المحددين"
 #: model:ir.model.fields.selection,name:flous_menu_visibility.selection__flous_button_hide_rule__visibility_mode__show
 msgid "Show only to selected users"
 msgstr "إظهار للمستخدمين المحددين فقط"
+
+#. module: flous_menu_visibility
+#: code:addons/flous_menu_visibility/wizard/visibility_picker.py:0
+msgid "Visibility Rule"
+msgstr "قاعدة الظهور"
+
