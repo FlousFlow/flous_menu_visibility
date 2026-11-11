@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Component, onWillDestroy, signal } from "@odoo/owl";
+import { Component, onWillDestroy, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { registry } from "@web/core/registry";
@@ -13,7 +13,7 @@ export class VisibilityPickerSystray extends Component {
         this.orm = useService("orm");
         this.action = useService("action");
         this.notification = useService("notification");
-        this.active = signal(false);
+        this.active = useState({ value: false });
         this.highlighted = null;
         this.onPointerOver = this.onPointerOver.bind(this);
         this.onPointerOut = this.onPointerOut.bind(this);
@@ -26,18 +26,18 @@ export class VisibilityPickerSystray extends Component {
     }
 
     get pickerTitle() {
-        return this.active() ? _t("Cancel item selection") : _t("Select an item to hide");
+        return this.active.value ? _t("Cancel item selection") : _t("Select an item to hide");
     }
 
     togglePickerMode() {
-        this.setPickerMode(!this.active());
+        this.setPickerMode(!this.active.value);
     }
 
     setPickerMode(active) {
-        if (this.active() === active) {
+        if (this.active.value === active) {
             return;
         }
-        this.active.set(active);
+        this.active.value = active;
         if (active) {
             document.addEventListener("pointerover", this.onPointerOver, true);
             document.addEventListener("pointerout", this.onPointerOut, true);
@@ -156,7 +156,7 @@ export class VisibilityPickerSystray extends Component {
     }
 
     onPointerOver(event) {
-        if (!this.active()) return;
+        if (!this.active.value) return;
         const target = this.getTarget(event.target);
         if (target?.node !== this.highlighted) {
             this.clearHighlight();
@@ -177,7 +177,7 @@ export class VisibilityPickerSystray extends Component {
     }
 
     async onDocumentClick(event) {
-        if (!this.active() || event.target.closest?.(".o_flous_visibility_picker")) return;
+        if (!this.active.value || event.target.closest?.(".o_flous_visibility_picker")) return;
         const target = this.getTarget(event.target);
         if (!target) return;
 
