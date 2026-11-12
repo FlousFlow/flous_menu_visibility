@@ -145,7 +145,7 @@ export class VisibilityPickerSystray extends Component {
                     type: "pos_config",
                     posConfigId: Number.isInteger(posId) && posId > 0 ? posId : false,
                     posConfigLabel:
-                        posRow.querySelector(".o_kanban_record_title")?.textContent.trim() ||
+                        posRow.querySelector('[name="card_title"] > span')?.textContent.trim() ||
                         posRow.textContent.trim(),
                 };
             }
