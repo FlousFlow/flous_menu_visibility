@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { Component, onWillDestroy, signal } from "@odoo/owl";
+import { onMounted } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { registry } from "@web/core/registry";
@@ -18,7 +19,17 @@ export class VisibilityPickerSystray extends Component {
         this.onPointerOver = this.onPointerOver.bind(this);
         this.onPointerOut = this.onPointerOut.bind(this);
         this.onDocumentClick = this.onDocumentClick.bind(this);
-        onWillDestroy(() => this.setPickerMode(false));
+        this.scheduleKanbanVisibilityScan = this.scheduleKanbanVisibilityScan.bind(this);
+        onMounted(() => {
+            this.kanbanObserver = new MutationObserver(this.scheduleKanbanVisibilityScan);
+            this.kanbanObserver.observe(document.body, { childList: true, subtree: true });
+            this.scheduleKanbanVisibilityScan();
+        });
+        onWillDestroy(() => {
+            this.setPickerMode(false);
+            this.kanbanObserver?.disconnect();
+            clearTimeout(this.kanbanScanTimer);
+        });
     }
 
     get isSystem() {
@@ -55,6 +66,67 @@ export class VisibilityPickerSystray extends Component {
             this.clearHighlight();
             this.pickerNotificationClose?.();
             this.pickerNotificationClose = null;
+        }
+    }
+
+    getControllerModelName(controller = this.action.currentController) {
+        return (
+            controller?.props?.resModel ||
+            controller?.model?.root?.resModel ||
+            controller?.model?.root?.config?.resModel
+        );
+    }
+
+    getKanbanRecordInfo(card, controller = this.action.currentController) {
+        const rawId = card?.getAttribute("data-id");
+        const records = Array.isArray(controller?.model?.root?.records)
+            ? controller.model.root.records
+            : [];
+        const cardIndex = card
+            ? [...document.querySelectorAll(".o_kanban_record[data-id]")].indexOf(card)
+            : -1;
+        const record = rawId && records.length
+            ? records.find((item) => item.id === rawId) || records[cardIndex]
+            : null;
+        const recordId = Number(record?.resId || rawId);
+        const label =
+            card?.querySelector('[name="card_title"] > span')?.textContent.trim() ||
+            card?.querySelector(':scope > span.fw-bold')?.textContent.trim() ||
+            card?.querySelector('.o_kanban_record_title, [name="name"]')?.textContent.trim() ||
+            card?.textContent.trim();
+        return {
+            recordId: Number.isInteger(recordId) && recordId > 0 ? recordId : false,
+            recordLabel: label,
+        };
+    }
+
+    scheduleKanbanVisibilityScan() {
+        if (this.kanbanScanTimer) return;
+        this.kanbanScanTimer = setTimeout(async () => {
+            this.kanbanScanTimer = null;
+            await this.scanKanbanVisibility();
+        }, 0);
+    }
+
+    async scanKanbanVisibility() {
+        const controller = this.action.currentController;
+        const modelName = this.getControllerModelName(controller);
+        if (!modelName) return;
+        const cards = [...document.querySelectorAll(".o_kanban_record[data-id]")];
+        const cardInfos = cards.map((card) => this.getKanbanRecordInfo(card, controller));
+        const recordIds = [...new Set(cardInfos.map((info) => info.recordId).filter(Boolean))];
+        if (!recordIds.length) return;
+        try {
+            const hiddenIds = new Set(await this.orm.call(
+                "flous.visibility.service", "get_hidden_record_ids", [modelName, recordIds],
+            ));
+            cards.forEach((card, index) => {
+                const hidden = hiddenIds.has(cardInfos[index].recordId);
+                card.style.display = hidden ? "none" : "";
+                card.dataset.flousVisibilityHidden = hidden ? "1" : "0";
+            });
+        } catch {
+            // An unavailable optional service must never break a standard Kanban view.
         }
     }
 
@@ -106,7 +178,7 @@ export class VisibilityPickerSystray extends Component {
             }
         }
         const controller = this.action.currentController;
-        const modelName = controller?.props?.resModel;
+        const modelName = this.getControllerModelName(controller);
         if (modelName === "account.journal") {
             const journalRow = eventTarget.closest?.("tr.o_data_row[data-res-id]");
             const journalId = Number(journalRow?.getAttribute("data-res-id"));
@@ -133,6 +205,17 @@ export class VisibilityPickerSystray extends Component {
                     posConfigLabel: posRow.textContent.trim(),
                 };
             }
+        }
+        const kanbanCard = eventTarget.closest?.(".o_kanban_record[data-id]");
+        if (kanbanCard && modelName && modelName !== "pos.config") {
+            const { recordId, recordLabel } = this.getKanbanRecordInfo(kanbanCard, controller);
+            return {
+                node: kanbanCard,
+                type: "record",
+                modelName,
+                recordId,
+                recordLabel,
+            };
         }
         const fieldNode = eventTarget.closest?.(".o_field_widget[name]");
         const fieldLabel = eventTarget.closest?.("label[for], .o_field_label[for]");
@@ -210,6 +293,24 @@ export class VisibilityPickerSystray extends Component {
         this.setPickerMode(false);
 
         try {
+            if (target.type === "record" && !target.recordId && target.recordLabel) {
+                const records = await this.orm.searchRead(
+                    target.modelName,
+                    [["display_name", "=", target.recordLabel]],
+                    ["id"],
+                    { limit: 1 },
+                );
+                target.recordId = records[0]?.id || false;
+            }
+            if (target.type === "pos_config" && !target.posConfigId && target.posConfigLabel) {
+                const configs = await this.orm.searchRead(
+                    "pos.config",
+                    [["name", "=", target.posConfigLabel]],
+                    ["id"],
+                    { limit: 1 },
+                );
+                target.posConfigId = configs[0]?.id || false;
+            }
             const action = target.type === "menu"
                 ? await this.orm.call(
                     "flous.visibility.picker", "action_open_for_menu", [target.xmlid]
@@ -219,6 +320,12 @@ export class VisibilityPickerSystray extends Component {
                     "flous.visibility.picker",
                     "action_open_for_journal",
                     [target.journalId],
+                )
+                : target.type === "record"
+                ? await this.orm.call(
+                    "flous.visibility.picker",
+                    "action_open_for_record",
+                    [target.modelName, target.recordId, target.recordLabel],
                 )
                 : target.type === "pos_config"
                 ? await this.orm.call(
