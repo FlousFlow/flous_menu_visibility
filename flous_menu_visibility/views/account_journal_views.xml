@@ -5,7 +5,7 @@
         <field name="model">account.journal</field>
         <field name="inherit_id" ref="account.view_account_journal_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='restricted_user_ids']" position="before">
+            <xpath expr="//field[@name='code']" position="before">
                 <field name="visibility_mode"/>
             </xpath>
         </field>
