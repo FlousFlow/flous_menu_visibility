@@ -123,14 +123,23 @@ export class VisibilityPickerSystray extends Component {
             }
         }
         if (modelName === "pos.config") {
-            const posRow = eventTarget.closest?.("tr.o_data_row[data-id]");
-            const posId = Number(posRow?.getAttribute("data-id"));
+            const posRow = eventTarget.closest?.(
+                "tr.o_data_row[data-id], .o_kanban_record[data-id]"
+            );
+            const rawPosId = posRow?.getAttribute("data-id");
+            const records = controller?.model?.root?.records;
+            const posRecord = rawPosId && Array.isArray(records)
+                ? records.find((record) => record.id === rawPosId)
+                : null;
+            const posId = Number(posRecord?.resId || rawPosId);
             if (posRow && Number.isInteger(posId) && posId > 0) {
                 return {
                     node: posRow,
                     type: "pos_config",
                     posConfigId: posId,
-                    posConfigLabel: posRow.textContent.trim(),
+                    posConfigLabel:
+                        posRow.querySelector(".o_kanban_record_title")?.textContent.trim() ||
+                        posRow.textContent.trim(),
                 };
             }
         }
