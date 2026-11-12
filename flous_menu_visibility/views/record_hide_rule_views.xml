@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="record_hide_rule_list" model="ir.ui.view">
+        <field name="name">flous.record.hide.rule.list</field>
+        <field name="model">flous.record.hide.rule</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="model_name"/>
+                <field name="record_id"/>
+                <field name="record_name"/>
+                <field name="visibility_mode"/>
+                <field name="user_count"/>
+                <field name="user_ids" widget="many2many_tags"/>
+                <field name="active" invisible="1"/>
+            </list>
+        </field>
+    </record>
+    <record id="record_hide_rule_form" model="ir.ui.view">
+        <field name="name">flous.record.hide.rule.form</field>
+        <field name="model">flous.record.hide.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name"/></h1></div>
+                    <group>
+                        <field name="model_id"/>
+                        <field name="model_name" readonly="1"/>
+                        <field name="record_id"/>
+                        <field name="record_name"/>
+                        <field name="visibility_mode"/>
+                        <field name="active"/>
+                    </group>
+                    <field name="user_count" readonly="1"/>
+                    <field name="user_ids" widget="many2many_tags"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_record_hide_rule" model="ir.actions.act_window">
+        <field name="name">Kanban Record Visibility Rules</field>
+        <field name="res_model">flous.record.hide.rule</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <menuitem id="menu_record_hide_rule" name="Kanban Record Visibility Rules"
+              parent="menu_visibility_control" action="action_record_hide_rule"
+              groups="base.group_system" sequence="47"/>
+</odoo>

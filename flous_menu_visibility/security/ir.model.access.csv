@@ -2,3 +2,5 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_field_hide_rule_system,field.hide.rule.system,model_flous_field_hide_rule,base.group_system,1,1,1,1
 access_button_hide_rule_system,button.hide.rule.system,model_flous_button_hide_rule,base.group_system,1,1,1,1
 access_visibility_picker_system,visibility.picker.system,model_flous_visibility_picker,base.group_system,1,1,1,1
+access_record_hide_rule_system,record.hide.rule.system,model_flous_record_hide_rule,base.group_system,1,1,1,1
+access_visibility_service_internal,visibility.service.internal,model_flous_visibility_service,base.group_user,1,0,0,0

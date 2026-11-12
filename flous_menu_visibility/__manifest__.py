@@ -41,6 +41,7 @@ server-side access. Use Odoo access rights when the value itself is confidential
         'views/ir_ui_menu_views.xml',
         'views/field_hide_rule_views.xml',
         'views/button_hide_rule_views.xml',
+        'views/record_hide_rule_views.xml',
         'views/stock_warehouse_views.xml',
         'views/account_journal_views.xml',
         'wizard/visibility_picker_views.xml',

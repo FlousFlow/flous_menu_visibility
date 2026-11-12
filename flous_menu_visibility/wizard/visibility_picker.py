@@ -17,6 +17,7 @@ class FlousVisibilityPicker(models.TransientModel):
             ('button', 'Button'),
             ('journal', 'Journal'),
             ('pos_config', 'Point of Sale'),
+            ('record', 'Kanban Record'),
         ],
         required=True,
         readonly=True,
@@ -26,6 +27,8 @@ class FlousVisibilityPicker(models.TransientModel):
     menu_id = fields.Many2one('ir.ui.menu', readonly=True)
     journal_id = fields.Many2one('account.journal', readonly=True)
     pos_config_id = fields.Many2one('pos.config', readonly=True)
+    record_id = fields.Integer(readonly=True)
+    record_name = fields.Char(readonly=True)
     button_name = fields.Char(readonly=True)
     button_type = fields.Selection(
         [
@@ -99,6 +102,7 @@ class FlousVisibilityPicker(models.TransientModel):
         'menu_id.complete_name',
         'journal_id.display_name',
         'pos_config_id.display_name',
+        'record_name',
         'button_label', 'button_name',
     )
     def _compute_target_label(self):
@@ -113,6 +117,10 @@ class FlousVisibilityPicker(models.TransientModel):
                 wizard.target_label = wizard.journal_id.display_name
             elif wizard.target_type == 'pos_config' and wizard.pos_config_id:
                 wizard.target_label = wizard.pos_config_id.display_name
+            elif wizard.target_type == 'record':
+                wizard.target_label = '%s · %s' % (
+                    wizard.model_id.name, wizard.record_name,
+                )
             elif wizard.target_type == 'button' and wizard.model_id:
                 wizard.target_label = '%s · %s' % (
                     wizard.model_id.name, wizard.button_label or wizard.button_name,
@@ -200,6 +208,33 @@ class FlousVisibilityPicker(models.TransientModel):
         return wizard._get_dialog_action()
 
     @api.model
+    def action_open_for_record(self, model_name, record_id, record_label=False):
+        self._check_visibility_admin()
+        model = self.env['ir.model'].sudo().search(
+            [('model', '=', model_name)], limit=1,
+        )
+        try:
+            record_id = int(record_id)
+        except (TypeError, ValueError):
+            record_id = 0
+        record = self.env[model_name].sudo().browse(record_id).exists() if model else False
+        if not model or not record:
+            raise UserError(_('The selected Kanban record could not be identified.'))
+        label = record_label or record.display_name
+        rule = self.env['flous.record.hide.rule'].sudo().search([
+            ('model_id', '=', model.id), ('record_id', '=', record.id),
+        ], limit=1)
+        wizard = self.sudo().create({
+            'target_type': 'record',
+            'model_id': model.id,
+            'record_id': record.id,
+            'record_name': label,
+            'visibility_mode': rule.visibility_mode if rule and rule.active else 'hide',
+            'user_ids': [(6, 0, rule.user_ids.ids if rule and rule.active else [])],
+        })
+        return wizard._get_dialog_action()
+
+    @api.model
     def action_open_for_button(
         self, model_name, button_name, button_type, button_id=False, button_label=False,
         button_field_name=False, button_hotkey=False,
@@ -277,6 +312,24 @@ class FlousVisibilityPicker(models.TransientModel):
                 'restricted_user_ids': [(6, 0, selected_users.ids)],
                 'visibility_mode': self.visibility_mode,
             })
+        elif self.target_type == 'record':
+            rule = self.env['flous.record.hide.rule'].sudo().search([
+                ('model_id', '=', self.model_id.id),
+                ('record_id', '=', self.record_id),
+            ], limit=1)
+            values = {
+                'name': _('Kanban: %s') % self.record_name,
+                'model_id': self.model_id.id,
+                'record_id': self.record_id,
+                'record_name': self.record_name,
+                'user_ids': [(6, 0, selected_users.ids)],
+                'visibility_mode': self.visibility_mode,
+                'active': True,
+            }
+            if rule:
+                rule.write(values)
+            else:
+                self.env['flous.record.hide.rule'].sudo().create(values)
         elif self.target_type == 'field':
             rule = self.env['flous.field.hide.rule'].sudo().search([
                 ('model_id', '=', self.model_id.id), ('field_id', '=', self.field_id.id),
