@@ -106,7 +106,10 @@ export class VisibilityPickerSystray extends Component {
             }
         }
         const controller = this.action.currentController;
-        const modelName = controller?.props?.resModel;
+        const modelName =
+            controller?.props?.resModel ||
+            controller?.model?.root?.resModel ||
+            controller?.model?.root?.config?.resModel;
         if (modelName === "account.journal") {
             const journalRow = eventTarget.closest?.("tr.o_data_row[data-id]");
             const journalId = Number(journalRow?.getAttribute("data-id"));
@@ -122,21 +125,25 @@ export class VisibilityPickerSystray extends Component {
                 };
             }
         }
-        if (modelName === "pos.config") {
+        if (modelName === "pos.config" || window.location.pathname.includes("/point-of-sale")) {
             const posRow = eventTarget.closest?.(
                 "tr.o_data_row[data-id], .o_kanban_record[data-id]"
             );
             const rawPosId = posRow?.getAttribute("data-id");
             const records = controller?.model?.root?.records;
-            const posRecord = rawPosId && Array.isArray(records)
-                ? records.find((record) => record.id === rawPosId)
+            const cardRecords = Array.isArray(records) ? records : [];
+            const cardIndex = posRow
+                ? [...document.querySelectorAll(".o_kanban_record[data-id]")].indexOf(posRow)
+                : -1;
+            const posRecord = rawPosId && cardRecords.length
+                ? cardRecords.find((record) => record.id === rawPosId) || cardRecords[cardIndex]
                 : null;
             const posId = Number(posRecord?.resId || rawPosId);
-            if (posRow && Number.isInteger(posId) && posId > 0) {
+            if (posRow) {
                 return {
                     node: posRow,
                     type: "pos_config",
-                    posConfigId: posId,
+                    posConfigId: Number.isInteger(posId) && posId > 0 ? posId : false,
                     posConfigLabel:
                         posRow.querySelector(".o_kanban_record_title")?.textContent.trim() ||
                         posRow.textContent.trim(),
@@ -162,7 +169,10 @@ export class VisibilityPickerSystray extends Component {
         const node = listHeader || listCellHeader || fieldNode || labelledField || listCell;
         if (node && !node.closest(".o_flous_visibility_picker")) {
             const controller = this.action.currentController;
-            const modelName = controller?.props?.resModel;
+            const modelName =
+                controller?.props?.resModel ||
+                controller?.model?.root?.resModel ||
+                controller?.model?.root?.config?.resModel;
             const fieldName = node.getAttribute("name") || node.dataset.name;
             if (modelName && fieldName) {
                 return { node, type: "field", modelName, fieldName };
@@ -219,6 +229,15 @@ export class VisibilityPickerSystray extends Component {
         this.setPickerMode(false);
 
         try {
+            if (target.type === "pos_config" && !target.posConfigId && target.posConfigLabel) {
+                const configs = await this.orm.searchRead(
+                    "pos.config",
+                    [["name", "=", target.posConfigLabel]],
+                    ["id"],
+                    { limit: 1 },
+                );
+                target.posConfigId = configs[0]?.id || false;
+            }
             const action = target.type === "menu"
                 ? await this.orm.call(
                     "flous.visibility.picker", "action_open_for_menu", [target.xmlid]
