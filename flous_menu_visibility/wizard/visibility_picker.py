@@ -16,6 +16,7 @@ class FlousVisibilityPicker(models.TransientModel):
             ('menu', 'Menu'),
             ('button', 'Button'),
             ('journal', 'Journal'),
+            ('pos_config', 'Point of Sale'),
         ],
         required=True,
         readonly=True,
@@ -24,6 +25,7 @@ class FlousVisibilityPicker(models.TransientModel):
     field_id = fields.Many2one('ir.model.fields', readonly=True)
     menu_id = fields.Many2one('ir.ui.menu', readonly=True)
     journal_id = fields.Many2one('account.journal', readonly=True)
+    pos_config_id = fields.Many2one('pos.config', readonly=True)
     button_name = fields.Char(readonly=True)
     button_type = fields.Selection(
         [
@@ -96,6 +98,7 @@ class FlousVisibilityPicker(models.TransientModel):
         'target_type', 'model_id', 'field_id.field_description',
         'menu_id.complete_name',
         'journal_id.display_name',
+        'pos_config_id.display_name',
         'button_label', 'button_name',
     )
     def _compute_target_label(self):
@@ -108,6 +111,8 @@ class FlousVisibilityPicker(models.TransientModel):
                 wizard.target_label = wizard.menu_id.complete_name
             elif wizard.target_type == 'journal' and wizard.journal_id:
                 wizard.target_label = wizard.journal_id.display_name
+            elif wizard.target_type == 'pos_config' and wizard.pos_config_id:
+                wizard.target_label = wizard.pos_config_id.display_name
             elif wizard.target_type == 'button' and wizard.model_id:
                 wizard.target_label = '%s · %s' % (
                     wizard.model_id.name, wizard.button_label or wizard.button_name,
@@ -173,6 +178,24 @@ class FlousVisibilityPicker(models.TransientModel):
             'journal_id': journal.id,
             'visibility_mode': journal.visibility_mode,
             'user_ids': [(6, 0, journal.restricted_user_ids.ids)],
+        })
+        return wizard._get_dialog_action()
+
+    @api.model
+    def action_open_for_pos_config(self, pos_config_id):
+        self._check_visibility_admin()
+        try:
+            pos_config_id = int(pos_config_id)
+        except (TypeError, ValueError):
+            pos_config_id = 0
+        config = self.env['pos.config'].sudo().browse(pos_config_id).exists()
+        if not config:
+            raise UserError(_('The selected point of sale could not be identified.'))
+        wizard = self.sudo().create({
+            'target_type': 'pos_config',
+            'pos_config_id': config.id,
+            'visibility_mode': config.visibility_mode,
+            'user_ids': [(6, 0, config.restricted_user_ids.ids)],
         })
         return wizard._get_dialog_action()
 
@@ -246,6 +269,11 @@ class FlousVisibilityPicker(models.TransientModel):
             })
         elif self.target_type == 'journal':
             self.journal_id.sudo().write({
+                'restricted_user_ids': [(6, 0, selected_users.ids)],
+                'visibility_mode': self.visibility_mode,
+            })
+        elif self.target_type == 'pos_config':
+            self.pos_config_id.sudo().write({
                 'restricted_user_ids': [(6, 0, selected_users.ids)],
                 'visibility_mode': self.visibility_mode,
             })

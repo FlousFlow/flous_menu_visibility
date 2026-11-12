@@ -10,3 +10,5 @@ from . import ir_ui_view
 from . import stock_warehouse
 from . import visibility_utils
 from . import account_journal
+from . import pos_config
+from . import pos_session

@@ -11,6 +11,7 @@
                     <field name="field_id" invisible="1"/>
                     <field name="menu_id" invisible="1"/>
                     <field name="journal_id" invisible="1"/>
+                    <field name="pos_config_id" invisible="1"/>
                     <field name="button_name" invisible="1"/>
                     <field name="button_type" invisible="1"/>
                     <field name="button_id" invisible="1"/>
