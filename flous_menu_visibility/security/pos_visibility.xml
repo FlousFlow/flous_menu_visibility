@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_config_visibility_rule" model="ir.access">
+        <field name="name">Point of Sale visibility (Flous Flow)</field>
+        <field name="model_id" ref="point_of_sale.model_pos_config"/>
+        <field name="operation">r</field>
+        <field name="domain">([('id', '!=', False)] if user.has_group('base.group_system') else ['|', '&amp;', ('visibility_mode', '=', 'hide'), ('restricted_user_ids', 'not in', user.id), '&amp;', ('visibility_mode', '=', 'show'), ('restricted_user_ids', 'in', user.id)])</field>
+    </record>
+</odoo>

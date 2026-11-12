@@ -122,6 +122,18 @@ export class VisibilityPickerSystray extends Component {
                 };
             }
         }
+        if (modelName === "pos.config") {
+            const posRow = eventTarget.closest?.("tr.o_data_row[data-id]");
+            const posId = Number(posRow?.getAttribute("data-id"));
+            if (posRow && Number.isInteger(posId) && posId > 0) {
+                return {
+                    node: posRow,
+                    type: "pos_config",
+                    posConfigId: posId,
+                    posConfigLabel: posRow.textContent.trim(),
+                };
+            }
+        }
         const fieldNode = eventTarget.closest?.(".o_field_widget[name]");
         const fieldLabel = eventTarget.closest?.("label[for], .o_field_label[for]");
         const fieldId = fieldLabel?.getAttribute("for");
@@ -207,6 +219,10 @@ export class VisibilityPickerSystray extends Component {
                     "flous.visibility.picker",
                     "action_open_for_journal",
                     [target.journalId],
+                )
+                : target.type === "pos_config"
+                ? await this.orm.call(
+                    "flous.visibility.picker", "action_open_for_pos_config", [target.posConfigId]
                 )
                 : target.type === "button"
                 ? await this.orm.call(
