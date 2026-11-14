@@ -4,7 +4,7 @@
 
 {
     'name': 'Menu, Field, Button, Warehouse & Journal Visibility Control',
-    'version': '20.0.3.0.0',
+    'version': '20.0.3.0.1',
     'category': 'Technical',
     'summary': 'Hide menus, fields and view buttons per user with a visual picker and access controls.',
     'description': """
