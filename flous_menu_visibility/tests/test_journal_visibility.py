@@ -72,14 +72,26 @@ class TestJournalVisibility(TransactionCase):
             'login': 'flous_pos_journal_user',
             'groups_id': [(6, 0, [
                 self.internal_group.id,
+                self.readonly_group.id,
                 self.env.ref('point_of_sale.group_pos_user').id,
             ])],
+        })
+        self.env['pos.payment.method'].create({
+            'name': 'Flous POS payment method',
+            'journal_id': self.journal_a.id,
         })
         self.journal_a.restricted_user_ids = [(4, pos_user.id)]
 
         visible = self.env['account.journal'].with_user(pos_user).search(
             [('id', '=', self.journal_a.id)])
         self.assertIn(self.journal_a, visible)
+
+        self.journal_b.restricted_user_ids = [(4, pos_user.id)]
+        self.assertNotIn(
+            self.journal_b,
+            self.env['account.journal'].with_user(pos_user).search(
+                [('id', '=', self.journal_b.id)]),
+        )
 
     def test_removing_restriction_restores(self):
         """Removing the restriction makes the journal visible again."""

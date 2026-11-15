@@ -27,6 +27,12 @@ class AccountJournal(models.Model):
         groups='base.group_system',
         help='Hide from selected users, or show this journal only to selected users.',
     )
+    pos_config_ids = fields.One2many(
+        'pos.config', 'journal_id', string='Point of Sale Configurations', readonly=True,
+    )
+    pos_invoice_config_ids = fields.One2many(
+        'pos.config', 'invoice_journal_id', string='Point of Sale Invoice Configurations', readonly=True,
+    )
 
     def write(self, vals):
         res = super().write(vals)
