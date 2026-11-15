@@ -34,7 +34,19 @@ class AccountJournal(models.Model):
         sudo, a hidden existing journal is missed and Odoo attempts to create
         a duplicate company/code pair.
         """
-        return super(AccountJournal, self.sudo())._ensure_pos_journal(code, name)
+        journal = self.sudo().search([
+            ('code', '=', code),
+            ('type', '=', 'sale'),
+            ('company_id', '=', self.env.company.id),
+        ], limit=1)
+        if not journal:
+            journal = self.sudo().create({
+                'name': name,
+                'code': code,
+                'type': 'sale',
+                'company_id': self.env.company.id,
+            })
+        return journal
 
     def write(self, vals):
         res = super().write(vals)
