@@ -51,6 +51,25 @@ class TestJournalVisibility(TransactionCase):
         self.assertNotIn(self.journal_a, found)
         self.assertIn(self.journal_b, found)
 
+    def test_pos_reuses_hidden_company_journal(self):
+        """POS internal journal lookup must not create a duplicate."""
+        self.journal_a.write({'type': 'sale', 'code': 'POSS'})
+        self.test_user.hidden_journal_ids = [(4, self.journal_a.id)]
+
+        journal = self.env['account.journal'].with_user(
+            self.test_user,
+        )._ensure_company_account_journal()
+
+        self.assertEqual(journal.id, self.journal_a.id)
+        self.assertNotIn(self.journal_a, self._visible_journals(self.test_user))
+        self.assertEqual(
+            self.env['account.journal'].sudo().search_count([
+                ('code', '=', 'POSS'),
+                ('company_id', '=', self.journal_a.company_id.id),
+            ]),
+            1,
+        )
+
     def test_other_user_not_affected(self):
         """Restricting one user must not affect other users."""
         self.test_user.hidden_journal_ids = [(4, self.journal_a.id)]

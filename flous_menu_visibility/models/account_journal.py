@@ -2,7 +2,7 @@
 # Copyright 2026 Flous Flow
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
-from odoo import fields, models
+from odoo import api, fields, models
 from .visibility_utils import visibility_mode_field
 
 
@@ -24,6 +24,17 @@ class AccountJournal(models.Model):
         help='Users for whom this journal will be hidden.',
     )
     visibility_mode = visibility_mode_field(groups='base.group_system')
+
+    @api.model
+    def _ensure_pos_journal(self, code, name):
+        """Let POS resolve its company journal independently of UI visibility.
+
+        The global journal visibility rule is for users browsing accounting
+        records. Odoo calls this helper during POS session closing too; without
+        sudo, a hidden existing journal is missed and Odoo attempts to create
+        a duplicate company/code pair.
+        """
+        return super(AccountJournal, self.sudo())._ensure_pos_journal(code, name)
 
     def write(self, vals):
         res = super().write(vals)
