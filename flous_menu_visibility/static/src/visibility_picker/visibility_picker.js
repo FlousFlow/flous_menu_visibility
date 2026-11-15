@@ -180,16 +180,19 @@ export class VisibilityPickerSystray extends Component {
         const modelName = this.getControllerModelName(controller);
         if (modelName === "account.journal") {
             const journalRow = eventTarget.closest?.("tr.o_data_row[data-id]");
-            const journalId = Number(journalRow?.getAttribute("data-id"));
-            if (journalRow && Number.isInteger(journalId) && journalId > 0) {
-                const nameCell = journalRow.querySelector(
-                    'td[name="name"], td[data-name="name"]'
-                );
+            const rawJournalId =
+                journalRow?.getAttribute("data-res-id") || journalRow?.getAttribute("data-id");
+            const journalId = Number(rawJournalId);
+            const nameCell = journalRow?.querySelector(
+                'td[name="name"], td[data-name="name"]'
+            );
+            const journalLabel = nameCell?.textContent.trim() || journalRow?.textContent.trim();
+            if (journalRow && journalLabel) {
                 return {
                     node: journalRow,
                     type: "journal",
-                    journalId,
-                    journalLabel: nameCell?.textContent.trim() || journalRow.textContent.trim(),
+                    journalId: Number.isInteger(journalId) && journalId > 0 ? journalId : false,
+                    journalLabel,
                 };
             }
         }
@@ -325,6 +328,15 @@ export class VisibilityPickerSystray extends Component {
                     { limit: 1 },
                 );
                 target.posConfigId = configs[0]?.id || false;
+            }
+            if (target.type === "journal" && !target.journalId && target.journalLabel) {
+                const journals = await this.orm.searchRead(
+                    "account.journal",
+                    [["name", "=", target.journalLabel]],
+                    ["id"],
+                    { limit: 1 },
+                );
+                target.journalId = journals[0]?.id || false;
             }
             const action = target.type === "menu"
                 ? await this.orm.call(
