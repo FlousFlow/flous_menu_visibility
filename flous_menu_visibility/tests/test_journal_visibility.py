@@ -65,6 +65,22 @@ class TestJournalVisibility(TransactionCase):
         found = self._visible_journals(admin)
         self.assertIn(self.journal_a, found)
 
+    def test_pos_user_can_read_hidden_journals_for_pos_operations(self):
+        """POS must still load its journals and payment methods."""
+        pos_user = self.env['res.users'].create({
+            'name': 'Flous POS Journal User',
+            'login': 'flous_pos_journal_user',
+            'groups_id': [(6, 0, [
+                self.internal_group.id,
+                self.env.ref('point_of_sale.group_pos_user').id,
+            ])],
+        })
+        self.journal_a.restricted_user_ids = [(4, pos_user.id)]
+
+        visible = self.env['account.journal'].with_user(pos_user).search(
+            [('id', '=', self.journal_a.id)])
+        self.assertIn(self.journal_a, visible)
+
     def test_removing_restriction_restores(self):
         """Removing the restriction makes the journal visible again."""
         self.test_user.hidden_journal_ids = [(4, self.journal_a.id)]
