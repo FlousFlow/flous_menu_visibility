@@ -2,7 +2,7 @@
 # Copyright 2026 Flous Flow
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
-from odoo import api, fields, models
+from odoo import SUPERUSER_ID, api, fields, models
 from .visibility_utils import visibility_mode_field
 
 
@@ -34,13 +34,15 @@ class AccountJournal(models.Model):
         sudo, a hidden existing journal is missed and Odoo attempts to create
         a duplicate company/code pair.
         """
-        journal = self.sudo().search([
+        company = self.env.company
+        journal_model = self.with_user(SUPERUSER_ID).sudo().with_company(company)
+        journal = journal_model.search([
             ('code', '=', code),
             ('type', '=', 'sale'),
             ('company_id', '=', self.env.company.id),
         ], limit=1)
         if not journal:
-            journal = self.sudo().create({
+            journal = journal_model.create({
                 'name': name,
                 'code': code,
                 'type': 'sale',
