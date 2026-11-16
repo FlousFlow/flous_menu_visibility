@@ -63,6 +63,11 @@ class TestJournalVisibility(TransactionCase):
         self.assertNotIn(self.journal_a, self._visible_journals(other))
         self.assertIn(self.journal_a, self._visible_journals(self.env.ref('base.user_admin')))
 
+    def test_journal_show_mode_with_empty_selection_hides_from_all_regular_users(self):
+        self.journal_a.visibility_mode = 'show'
+        self.assertNotIn(self.journal_a, self._visible_journals(self.test_user))
+        self.assertIn(self.journal_a, self._visible_journals(self.env.ref('base.user_admin')))
+
     def test_hidden_journal_cannot_be_read_by_known_record_id(self):
         """A guessed or previously known journal ID does not bypass the rule."""
         self.journal_a.restricted_user_ids = [(4, self.test_user.id)]

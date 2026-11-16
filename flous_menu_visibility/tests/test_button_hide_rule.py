@@ -35,10 +35,11 @@ class TestButtonHideRule(TransactionCase):
             self.button_type, self.button_name, self.button_id or '',
         )
 
-    def _create_rule(self, users):
+    def _create_rule(self, users, visibility_mode='hide'):
         return self.env['flous.button.hide.rule'].create({
             'name': 'Hide partner action button',
             'model_id': self.model.id,
+            'visibility_mode': visibility_mode,
             'button_type': self.button_type,
             'button_name': self.button_name,
             'button_id': self.button_id,
@@ -89,6 +90,28 @@ class TestButtonHideRule(TransactionCase):
         self._create_rule([self.user.id])
         admin_nodes = self._button_nodes(self.env.ref('base.user_admin'))
         self.assertTrue(admin_nodes)
+        self.assertTrue(all(node.get('invisible') != '1' for node in admin_nodes))
+
+    def test_show_mode_only_hides_button_from_unselected_users(self):
+        self._create_rule([self.user.id], visibility_mode='show')
+        other = self.env['res.users'].create({
+            'name': 'Flous Button Show Other User',
+            'login': 'flous_button_show_other_user',
+            'groups_id': [(6, 0, [
+                self.env.ref('base.group_user').id,
+                self.env.ref('stock.group_stock_user').id,
+            ])],
+        })
+
+        self.assertTrue(all(node.get('invisible') != '1' for node in self._button_nodes(self.user)))
+        self.assertTrue(all(node.get('invisible') == '1' for node in self._button_nodes(other)))
+        admin_nodes = self._button_nodes(self.env.ref('base.user_admin'))
+        self.assertTrue(all(node.get('invisible') != '1' for node in admin_nodes))
+
+    def test_show_mode_with_empty_selection_hides_button_from_all_regular_users(self):
+        self._create_rule([], visibility_mode='show')
+        self.assertTrue(all(node.get('invisible') == '1' for node in self._button_nodes(self.user)))
+        admin_nodes = self._button_nodes(self.env.ref('base.user_admin'))
         self.assertTrue(all(node.get('invisible') != '1' for node in admin_nodes))
 
     def test_picker_creates_rule_for_selected_users(self):

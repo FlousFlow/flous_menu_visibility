@@ -65,6 +65,11 @@ class TestMenuVisibility(TransactionCase):
         self.assertIn(self.menu, self.menu.with_user(self.test_user)._filter_visible_menus())
         self.assertNotIn(self.menu, self.menu.with_user(other)._filter_visible_menus())
 
+    def test_show_mode_with_empty_selection_hides_menu_from_all_regular_users(self):
+        self.menu.visibility_mode = 'show'
+        self.assertNotIn(self.menu, self.menu.with_user(self.test_user)._filter_visible_menus())
+        self.assertIn(self.menu, self.menu.with_user(self.env.ref('base.user_admin'))._filter_visible_menus())
+
     def test_admin_sees_everything(self):
         """System administrators always see restricted menus."""
         admin = self.env.ref('base.user_admin')

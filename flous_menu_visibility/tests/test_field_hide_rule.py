@@ -77,6 +77,11 @@ class TestFieldHideRule(TransactionCase):
         self.assertFalse(self._node_invisible(self._get_arch(self.test_user)))
         self.assertTrue(self._node_invisible(self._get_arch(other)))
 
+    def test_show_mode_with_empty_selection_hides_field_from_all_regular_users(self):
+        self._create_rule([], 'show')
+        self.assertTrue(self._node_invisible(self._get_arch(self.test_user)))
+        self.assertFalse(self._node_invisible(self._get_arch(self.env.ref('base.user_admin'))))
+
     def test_admin_always_sees_field(self):
         """System administrators are never restricted."""
         self._create_rule([self.test_user.id])

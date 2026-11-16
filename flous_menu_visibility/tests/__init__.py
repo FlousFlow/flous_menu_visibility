@@ -8,3 +8,5 @@ from . import test_visibility_picker
 from . import test_button_hide_rule
 from . import test_warehouse_visibility
 from . import test_journal_visibility
+from . import test_pos_config_visibility
+from . import test_record_visibility
