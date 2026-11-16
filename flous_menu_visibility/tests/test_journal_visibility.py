@@ -65,8 +65,8 @@ class TestJournalVisibility(TransactionCase):
         found = self._visible_journals(admin)
         self.assertIn(self.journal_a, found)
 
-    def test_pos_user_can_read_hidden_journals_for_pos_operations(self):
-        """POS must still load its journals and payment methods."""
+    def test_pos_user_cannot_see_hidden_journal_but_can_read_payment_method(self):
+        """Hiding a journal applies to POS users without hiding POS methods."""
         pos_user = self.env['res.users'].create({
             'name': 'Flous POS Journal User',
             'login': 'flous_pos_journal_user',
@@ -76,7 +76,7 @@ class TestJournalVisibility(TransactionCase):
                 self.env.ref('point_of_sale.group_pos_user').id,
             ])],
         })
-        self.env['pos.payment.method'].create({
+        payment_method = self.env['pos.payment.method'].create({
             'name': 'Flous POS payment method',
             'journal_id': self.journal_a.id,
         })
@@ -84,7 +84,12 @@ class TestJournalVisibility(TransactionCase):
 
         visible = self.env['account.journal'].with_user(pos_user).search(
             [('id', '=', self.journal_a.id)])
-        self.assertIn(self.journal_a, visible)
+        self.assertNotIn(self.journal_a, visible)
+        self.assertIn(
+            payment_method,
+            self.env['pos.payment.method'].with_user(pos_user).search(
+                [('id', '=', payment_method.id)]),
+        )
 
         account = self.env['account.account'].create({
             'name': 'Flous POS Test Account',
@@ -110,12 +115,12 @@ class TestJournalVisibility(TransactionCase):
             move,
             self.env['account.move'].with_user(pos_user).search(
                 [('id', '=', move.id)]),
-            'POS journal access must not bypass accounting entry visibility.',
+            'POS membership must not bypass accounting entry visibility.',
         )
         self.assertFalse(
             self.env['account.move.line'].with_user(pos_user).search(
                 [('move_id', '=', move.id)]),
-            'POS journal access must not bypass accounting line visibility.',
+            'POS membership must not bypass accounting line visibility.',
         )
 
         self.journal_b.restricted_user_ids = [(4, pos_user.id)]
