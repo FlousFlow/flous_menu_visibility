@@ -51,6 +51,25 @@ class TestJournalVisibility(TransactionCase):
         self.assertNotIn(self.journal_a, found)
         self.assertIn(self.journal_b, found)
 
+    def test_journal_show_mode_only_allows_selected_users(self):
+        """Show mode exposes the journal only to selected non-admin users."""
+        other = self._new_user('flous_journal_show_other')
+        self.journal_a.write({
+            'visibility_mode': 'show',
+            'restricted_user_ids': [(6, 0, [self.test_user.id])],
+        })
+
+        self.assertIn(self.journal_a, self._visible_journals(self.test_user))
+        self.assertNotIn(self.journal_a, self._visible_journals(other))
+        self.assertIn(self.journal_a, self._visible_journals(self.env.ref('base.user_admin')))
+
+    def test_hidden_journal_cannot_be_read_by_known_record_id(self):
+        """A guessed or previously known journal ID does not bypass the rule."""
+        self.journal_a.restricted_user_ids = [(4, self.test_user.id)]
+
+        with self.assertRaises(AccessError):
+            self.journal_a.with_user(self.test_user).read(['name'])
+
     def test_other_user_not_affected(self):
         """Restricting one user must not affect other users."""
         self.test_user.hidden_journal_ids = [(4, self.journal_a.id)]
@@ -129,6 +148,98 @@ class TestJournalVisibility(TransactionCase):
             self.env['account.journal'].with_user(pos_user).search(
                 [('id', '=', self.journal_b.id)]),
         )
+
+    def test_hidden_cash_and_bank_journals_do_not_break_pos_session_loading(self):
+        """Hidden POS payment journals stay hidden while the POS session still loads."""
+        pos_user = self.env['res.users'].create({
+            'name': 'Flous POS Session Visibility User',
+            'login': 'flous_pos_session_visibility_user',
+            'groups_id': [(6, 0, [
+                self.internal_group.id,
+                self.readonly_group.id,
+                self.env.ref('point_of_sale.group_pos_user').id,
+            ])],
+        })
+        company = self.env.company
+        receivable = self.env['account.account'].create({
+            'name': 'Flous POS Visibility Receivable',
+            'code': '18980',
+            'account_type': 'asset_receivable',
+            'reconcile': True,
+        })
+        cash_account = self.env['account.account'].create({
+            'name': 'Flous POS Visibility Cash',
+            'code': '18981',
+            'account_type': 'asset_cash',
+        })
+        bank_account = self.env['account.account'].create({
+            'name': 'Flous POS Visibility Bank',
+            'code': '18982',
+            'account_type': 'asset_cash',
+        })
+        cash_journal = self.env['account.journal'].create({
+            'name': 'Flous POS Visibility Cash',
+            'type': 'cash',
+            'code': 'FVC01',
+            'company_id': company.id,
+            'default_account_id': cash_account.id,
+        })
+        bank_journal = self.env['account.journal'].create({
+            'name': 'Flous POS Visibility Bank',
+            'type': 'bank',
+            'code': 'FVB01',
+            'company_id': company.id,
+            'default_account_id': bank_account.id,
+        })
+        config = self.env['pos.config'].create({
+            'name': 'Flous POS Hidden Journal Test',
+        })
+        cash_method = self.env['pos.payment.method'].create({
+            'name': 'Flous POS Hidden Cash Method',
+            'journal_id': cash_journal.id,
+            'receivable_account_id': receivable.id,
+            'company_id': company.id,
+        })
+        bank_method = self.env['pos.payment.method'].create({
+            'name': 'Flous POS Hidden Bank Method',
+            'journal_id': bank_journal.id,
+            'receivable_account_id': receivable.id,
+            'company_id': company.id,
+        })
+        config.write({
+            'payment_method_ids': [(6, 0, [cash_method.id, bank_method.id])],
+        })
+        session = self.env['pos.session'].create({
+            'config_id': config.id,
+            'user_id': pos_user.id,
+        })
+
+        hidden_journals = config.journal_id | cash_journal | bank_journal
+        hidden_journals.write({'restricted_user_ids': [(4, pos_user.id)]})
+
+        visible_journals = self.env['account.journal'].with_user(pos_user).search(
+            [('id', 'in', hidden_journals.ids)])
+        self.assertFalse(
+            visible_journals,
+            'POS membership must not expose hidden sales, cash, or bank journals.',
+        )
+        self.assertTrue(all(journal.exists() for journal in hidden_journals))
+        visible_methods = self.env['pos.payment.method'].with_user(pos_user).search(
+            [('id', 'in', [cash_method.id, bank_method.id])])
+        self.assertEqual(set(visible_methods.ids), {cash_method.id, bank_method.id})
+        self.assertIn(
+            config,
+            self.env['pos.config'].with_user(pos_user).search([('id', '=', config.id)]),
+        )
+
+        pos_data = session.with_user(pos_user).load_data([], only_data=True)
+        loaded_method_ids = {
+            method['id'] for method in pos_data['pos.payment.method']['data']
+        }
+        self.assertTrue({cash_method.id, bank_method.id} <= loaded_method_ids)
+        # A cash-controlled POS opens in opening_control before the cashier
+        # confirms the opening balance; loading data at this step is expected.
+        self.assertEqual(session.state, 'opening_control')
 
     def test_removing_restriction_restores(self):
         """Removing the restriction makes the journal visible again."""
