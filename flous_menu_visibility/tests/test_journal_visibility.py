@@ -86,6 +86,38 @@ class TestJournalVisibility(TransactionCase):
             [('id', '=', self.journal_a.id)])
         self.assertIn(self.journal_a, visible)
 
+        account = self.env['account.account'].create({
+            'name': 'Flous POS Test Account',
+            'code': '19992',
+            'account_type': 'asset_current',
+        })
+        move = self.env['account.move'].create({
+            'journal_id': self.journal_a.id,
+            'line_ids': [
+                (0, 0, {
+                    'name': 'Flous POS test debit',
+                    'account_id': account.id,
+                    'debit': 50.0,
+                }),
+                (0, 0, {
+                    'name': 'Flous POS test credit',
+                    'account_id': account.id,
+                    'credit': 50.0,
+                }),
+            ],
+        })
+        self.assertNotIn(
+            move,
+            self.env['account.move'].with_user(pos_user).search(
+                [('id', '=', move.id)]),
+            'POS journal access must not bypass accounting entry visibility.',
+        )
+        self.assertFalse(
+            self.env['account.move.line'].with_user(pos_user).search(
+                [('move_id', '=', move.id)]),
+            'POS journal access must not bypass accounting line visibility.',
+        )
+
         self.journal_b.restricted_user_ids = [(4, pos_user.id)]
         self.assertNotIn(
             self.journal_b,
