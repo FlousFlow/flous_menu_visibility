@@ -242,6 +242,11 @@ class TestJournalVisibility(TransactionCase):
             method['id'] for method in pos_data['pos.payment.method']['data']
         }
         self.assertTrue({cash_method.id, bank_method.id} <= loaded_method_ids)
+        loaded_methods = {
+            method['id']: method for method in pos_data['pos.payment.method']['data']
+        }
+        self.assertEqual(loaded_methods[cash_method.id]['type'], 'cash')
+        self.assertEqual(loaded_methods[bank_method.id]['type'], 'bank')
         # A cash-controlled POS opens in opening_control before the cashier
         # confirms the opening balance; loading data at this step is expected.
         self.assertEqual(session.state, 'opening_control')

@@ -12,5 +12,6 @@ from . import visibility_utils
 from . import account_journal
 from . import pos_config
 from . import pos_session
+from . import pos_payment_method
 from . import record_hide_rule
 from . import visibility_service
