@@ -29,6 +29,16 @@ class PosConfig(models.Model):
         if self.filtered(lambda config: config._is_restricted_for_current_user()):
             raise AccessError(_('You are not allowed to open this point of sale. Contact your administrator.'))
 
+    @api.model
+    def _load_pos_data_fields(self, config):
+        # POS bootstrap reads pos.config as the cashier. Only load fields that
+        # the current user can read, so admin-only visibility fields cannot
+        # abort the complete POS configuration payload.
+        fields = list(self.fields_get().keys())
+        if 'id' not in fields:
+            fields.append('id')
+        return fields
+
     @api.model_create_multi
     def create(self, vals_list):
         configs = super().create(vals_list)
