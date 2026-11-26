@@ -123,6 +123,12 @@ class TestJournalVisibility(TransactionCase):
         self.assertNotIn(hidden_journal, wizard.available_journal_ids)
         self.assertIn(visible_journal, wizard.available_journal_ids)
 
+        # Exercise the actual accounting payment creation, not only wizard
+        # rendering and journal selection.
+        payments = wizard._create_payments()
+        self.assertTrue(payments)
+        self.assertTrue(all(payment.journal_id != hidden_journal for payment in payments))
+
     def test_other_user_not_affected(self):
         """Restricting one user must not affect other users."""
         self.test_user.hidden_journal_ids = [(4, self.journal_a.id)]
