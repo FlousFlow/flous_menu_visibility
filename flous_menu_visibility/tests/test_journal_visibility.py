@@ -123,6 +123,20 @@ class TestJournalVisibility(TransactionCase):
         self.assertNotIn(hidden_journal, wizard.available_journal_ids)
         self.assertIn(visible_journal, wizard.available_journal_ids)
 
+        # The web client can submit the previous selection again during an
+        # onchange. It must be removed before the web onchange builds a
+        # snapshot, otherwise reading that hidden journal raises AccessError.
+        stale_values = wizard._sanitize_inaccessible_payment_values({
+            'journal_id': hidden_journal.id,
+            'payment_method_line_id': preferred_line.id,
+            'available_journal_ids': [(4, hidden_journal.id)],
+            'available_payment_method_line_ids': [(4, preferred_line.id)],
+        })
+        self.assertFalse(stale_values['journal_id'])
+        self.assertFalse(stale_values['payment_method_line_id'])
+        self.assertNotIn('available_journal_ids', stale_values)
+        self.assertNotIn('available_payment_method_line_ids', stale_values)
+
         # Exercise the actual accounting payment creation, not only wizard
         # rendering and journal selection.
         payments = wizard._create_payments()

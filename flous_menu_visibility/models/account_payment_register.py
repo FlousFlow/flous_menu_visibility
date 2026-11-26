@@ -10,6 +10,65 @@ class AccountPaymentRegister(models.TransientModel):
 
     _inherit = 'account.payment.register'
 
+    @staticmethod
+    def _m2o_id(value):
+        """Return an id from the representations used by web onchange calls."""
+        if isinstance(value, dict):
+            return value.get('id')
+        if isinstance(value, (list, tuple)):
+            return value[0] if value else False
+        return value
+
+    def _sanitize_inaccessible_payment_values(self, values):
+        """Remove stale hidden payment values sent by the web client.
+
+        When the user changes a payment journal, the browser can submit the
+        journal that was selected before the visibility rule was applied. Odoo
+        reads that value while building its onchange snapshot, so record rules
+        raise an access error before the normal journal domain can recover.
+        """
+        values = dict(values)
+        # These are computed domains.  The browser keeps their previous values
+        # in its onchange snapshot, which can include a journal that became
+        # hidden after the wizard was opened.  Never trust that client cache:
+        # let Odoo recompute it under the current user's record rules.
+        for field_name in (
+            'available_journal_ids',
+            'available_payment_method_line_ids',
+            'available_partner_bank_ids',
+        ):
+            values.pop(field_name, None)
+
+        journal_id = self._m2o_id(values.get('journal_id'))
+        if journal_id and not self.env['account.journal'].search([
+            ('id', '=', journal_id),
+            ('type', 'in', ('bank', 'cash', 'credit')),
+        ], limit=1):
+            # Keep the key because web's onchange marks it as modified.
+            values['journal_id'] = False
+
+        method_line_id = self._m2o_id(values.get('payment_method_line_id'))
+        if method_line_id:
+            method_line = self.env['account.payment.method.line'].sudo().browse(
+                method_line_id
+            ).exists()
+            method_journal_id = method_line.journal_id.id
+            if not method_line or not self.env['account.journal'].search([
+                ('id', '=', method_journal_id),
+                ('type', 'in', ('bank', 'cash', 'credit')),
+            ], limit=1):
+                values['payment_method_line_id'] = False
+        return values
+
+    def onchange(self, values, field_names, fields_spec):
+        """Prevent a stale hidden journal from aborting payment onchange."""
+        sanitized_values = self._sanitize_inaccessible_payment_values(values)
+        return super().onchange(
+            sanitized_values,
+            field_names,
+            fields_spec,
+        )
+
     @api.model
     def default_get(self, fields_list):
         values = super().default_get(fields_list)
