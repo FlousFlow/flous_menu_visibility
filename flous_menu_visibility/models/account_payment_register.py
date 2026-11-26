@@ -10,6 +10,19 @@ class AccountPaymentRegister(models.TransientModel):
 
     _inherit = 'account.payment.register'
 
+    @api.model
+    def default_get(self, fields_list):
+        values = super().default_get(fields_list)
+        journal_id = values.get('journal_id')
+        if journal_id:
+            visible_journals = self.env['account.journal'].search([
+                ('id', '=', journal_id),
+                ('type', 'in', ('bank', 'cash', 'credit')),
+            ])
+            if not visible_journals:
+                values.pop('journal_id', None)
+        return values
+
     @api.model_create_multi
     def create(self, vals_list):
         wizards = super().create(vals_list)
