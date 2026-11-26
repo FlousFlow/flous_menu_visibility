@@ -75,6 +75,54 @@ class TestJournalVisibility(TransactionCase):
         with self.assertRaises(AccessError):
             self.journal_a.with_user(self.test_user).read(['name'])
 
+    def test_payment_register_ignores_hidden_preferred_journal(self):
+        """A hidden preferred journal must not break the payment wizard."""
+        payment_user = self.env['res.users'].create({
+            'name': 'Flous Payment User',
+            'login': 'flous_payment_user',
+            'groups_id': [(6, 0, [
+                self.internal_group.id,
+                self.env.ref('account.group_account_invoice').id,
+            ])],
+        })
+        sale_journal = self.env['account.journal'].search(
+            [('type', '=', 'sale')], limit=1)
+        bank_journal = self.env['account.journal'].search(
+            [('type', '=', 'bank')], limit=1)
+        hidden_journal = bank_journal.copy({'code': 'FHID', 'name': 'Flous Hidden Payment'})
+        visible_journal = bank_journal.copy({'code': 'FVIS', 'name': 'Flous Visible Payment'})
+        hidden_journal.write({
+            'visibility_mode': 'hide',
+            'restricted_user_ids': [(4, payment_user.id)],
+        })
+
+        income = self.env['account.account'].search(
+            [('account_type', '=', 'income')], limit=1)
+        partner = self.env['res.partner'].create({'name': 'Flous Payment Customer'})
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': partner.id,
+            'journal_id': sale_journal.id,
+            'invoice_line_ids': [(0, 0, {
+                'name': 'Visibility regression item',
+                'quantity': 1,
+                'price_unit': 10,
+                'account_id': income.id,
+            })],
+        })
+        invoice.action_post()
+        preferred_line = hidden_journal.inbound_payment_method_line_ids[:1]
+        self.assertTrue(preferred_line)
+        invoice.preferred_payment_method_line_id = preferred_line
+
+        wizard = self.env['account.payment.register'].with_user(payment_user).with_context(
+            active_model='account.move', active_ids=invoice.ids,
+        ).create({})
+
+        self.assertNotEqual(wizard.journal_id, hidden_journal)
+        self.assertNotIn(hidden_journal, wizard.available_journal_ids)
+        self.assertIn(visible_journal, wizard.available_journal_ids)
+
     def test_other_user_not_affected(self):
         """Restricting one user must not affect other users."""
         self.test_user.hidden_journal_ids = [(4, self.journal_a.id)]

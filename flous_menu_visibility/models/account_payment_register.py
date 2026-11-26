@@ -10,6 +10,17 @@ class AccountPaymentRegister(models.TransientModel):
 
     _inherit = 'account.payment.register'
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        wizards = super().create(vals_list)
+        for wizard in wizards:
+            available = wizard.available_journal_ids
+            if wizard.journal_id.id not in available.ids:
+                wizard.journal_id = available.filtered(
+                    lambda journal: journal.type in ('bank', 'cash', 'credit')
+                )[:1]
+        return wizards
+
     @api.depends('available_journal_ids')
     def _compute_journal_id(self):
         for wizard in self:
